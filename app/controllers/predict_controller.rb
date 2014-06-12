@@ -1,0 +1,2 @@
+class PredictController < ApplicationController
+end
