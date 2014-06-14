@@ -42,4 +42,6 @@ gem 'spring',        group: :development
 
 gem 'rails_12factor', group: :production
 
+gem "google_visualr", ">= 2.1"
+
 ruby "1.9.3"
