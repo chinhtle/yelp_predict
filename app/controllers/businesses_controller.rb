@@ -28,7 +28,7 @@ class BusinessesController < ApplicationController
                                {color: '#836953'}, {color: '#FF6961'},
                                {color: '#B39EB5'}, {color: '#FDFD96'}]
 
-        opts   = { :width => 800, :height => 400,
+        opts   = { :height => 400,
                    # :title => 'My Daily Activities',
                    :pieHole => 0.5, :legend => {position: 'bottom', maxLines: 3},
                    :slices => slice_pastel_colors}
