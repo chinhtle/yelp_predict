@@ -6,7 +6,7 @@
          by causing the page to refresh, which utilizes the chart's width: 100%
          to adjust to the page. -->
     <script>
-        $(document).ready(function() {
+        $(document).on('page:load', function() {
             $(window).resize(function(){
                 $('body').load(window.location.pathname);
             });
