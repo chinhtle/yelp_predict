@@ -1,6 +1,7 @@
 <div class="center hero-unit">
-  <h1>Yelp Personality Predictor</h1>
-  <h2>What would you like to predict?</h2>
-  <%= link_to "User", users_path, class: "btn btn-large btn-primary"%>
-  <%= link_to "Business", businesses_path, class: "btn btn-large btn-primary" %>
+    <h1>Yelp Personality Predictor</h1>
+    <h2>What would you like to predict?</h2>
+
+    <%= button_to "User", users_path, class: "btn btn-large btn-primary", method: :get %>
+    <%= button_to "Business", businesses_path, class: "btn btn-large btn-primary", method: :get %>
 </div>
