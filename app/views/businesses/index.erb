@@ -1,13 +1,16 @@
 <head>
   <script src='https://www.google.com/jsapi'></script>
+
   <!-- title, scripts, css etc go here -->
   <noscript>
     <meta http-equiv="refresh" content="2;url=http://yoursite.com/nojswarning.html">
   </noscript>
 </head>
 <body>
-    <h1>Businesses Homepage</h1>
+    <div class="container">
+        <h1 style="min-width: 800px">Business Homepage</h1>
 
-    <div id='chart'></div>
-    <%= render_chart @chart, 'chart' %>
+        <div id='chart' style="width: 800px; margin-left: auto; margin-right: auto"></div>
+        <%= render_chart @chart, 'chart' %>
+    </div>
 </body>
