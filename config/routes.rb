@@ -2,11 +2,14 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  get '/' => 'predict#index'
+  root 'predict#index'
 
-  resources :predict
-  resources :users
-  resources :businesses
+  #resources :predict
+  #resources :users
+  #resources :businesses
+
+  match '/user',      to: 'users#index',      via: 'get'
+  match '/business',  to: 'businesses#index', via: 'get'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
