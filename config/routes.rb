@@ -3,12 +3,12 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   root 'predict#index'
-
   #resources :predict
   #resources :users
   #resources :businesses
 
   match '/user',      to: 'users#index',      via: 'get'
+  match '/user/result',      to: 'users#result',      via: 'post'
   match '/business',  to: 'businesses#index', via: 'get'
 
   # Example of regular route:
