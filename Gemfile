@@ -44,4 +44,8 @@ gem 'rails_12factor', group: :production
 
 gem "google_visualr", ">= 2.1"
 
+gem 'tzinfo-data'
+
+gem 'nokogiri'
+
 ruby "1.9.3"

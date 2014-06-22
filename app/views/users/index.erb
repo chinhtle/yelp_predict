@@ -1,1 +1,14 @@
 <h1>Users Homepage</h1>
+
+<%= form_tag(user_result_path, method: "post") do %>
+  <div class="col-lg-6 col-md-offset-3">
+    	<div class="input-group">
+    	    <!--<input type="text" class="form-control" placeholder="Please enter Yelp URL">-->
+    	    <%= text_field "url", "url", class: "form-control", placeholder: "Please enter Yelp URL" %>
+    	    <span class="input-group-btn">
+    	    	<%= button_to "Submit", user_result_path , class: "btn btn-default", method: :post %>
+      		</span>
+    	</div><!-- /input-group -->
+	</div><!-- /.col-lg-6 -->
+  	</span>
+<% end %> 
