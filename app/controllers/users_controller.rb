@@ -21,7 +21,9 @@ class UsersController < ApplicationController
       url = 'http://' + url
     end
     #Get page
-    page = Nokogiri::HTML(open(url, "User-Agent" => "Ruby/#{RUBY_VERSION}"))    
+
+    #Ruby/#{RUBY_VERSION}
+    page = Nokogiri::HTML(open(url, "User-Agent" => "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"))
     puts page.class   # => Nokogiri::HTML::Document
     
     #user_stats block
