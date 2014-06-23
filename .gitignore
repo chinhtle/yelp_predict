@@ -14,3 +14,9 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Ignore DS_Stores
+.DS_Store
+
+# Ignore RubyMine workspace files
+.idea
