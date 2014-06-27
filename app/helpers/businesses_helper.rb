@@ -22,7 +22,7 @@ module BusinessesHelper
   HASH_KEY_USER_ID = 'user_id'
 
   # User Data Set Constants
-  USER_DATA_FILENAME = 'user.csv'
+  USER_DATA_FILENAME = 'user_mapped_updated2.csv'
   USER_DATA_FILEPATH = "#{DATA_PATH}/#{USER_DATA_FILENAME}"
   USER_ID_CSV_NAME = HASH_KEY_USER_ID
   USER_PERSONALITY_CSV_NAME = 'personality'
@@ -75,13 +75,20 @@ module BusinessesHelper
   def summarize_and_add_business_to_db(business_hash)
     puts 'Summarizing and adding business to DB..'
 
-    # Create a temporary hash used for the output of the summary
-    tmp_hash = {}
-
     # Go through each business and get the summary of the personality types
     # and add it to the business database.
     business_hash.each do |business_id, user_hash|
+      # Create a temporary hash used for the output of the summary
+      tmp_hash = Hash.new(0)
+
       get_personality_summary_hash(user_hash, tmp_hash)
+
+      puts "Summary for business-#{business_id}:"
+
+      # Print the summary for this business.
+      tmp_hash.each do |personality, value|
+        puts "\t#{personality}: #{value}"
+      end
 
       # Add the new entry to the table
       # Business.new(id:              business_id,
@@ -116,7 +123,12 @@ module BusinessesHelper
         personality = customer_personality_hash[user]
 
         # Store the personality from the business' users hash
-        users_hash[user] = personality
+        if personality.nil?
+          puts "User-id: #{user} was not found in customer-to-personality hash."
+        else
+          puts "Adding personality type: #{personality}"
+          users_hash[user] = personality
+        end
       end
     end
   end
@@ -132,7 +144,7 @@ module BusinessesHelper
         key = row[USER_ID_CSV_NAME]
         value = row[USER_PERSONALITY_CSV_NAME]
 
-        #puts "Key: #{key}, Value: #{value}"
+        puts "Key: #{key}, Value: #{value}"
 
         # Print feedback every N records processed
         if print_idx % FEEDBACK_PRINT_THRESH == 0
@@ -148,7 +160,7 @@ module BusinessesHelper
       puts '' # Newline after the feedback prints.
     else
       puts "User CSV file does not exist!"
-      exit(-1)
+      clean_exit
     end
   end
 
@@ -178,10 +190,10 @@ module BusinessesHelper
         # Now store the value into the hash.  If this is a new
         # key, then create a hash and add the value
         if hash.has_key?(key)
-          hash[key][value] = 0 # Just make sure value is added as key to hash
+          hash[key][value] = nil # Just make sure value is added as key to hash
         else
           hash[key] = Hash.new
-          hash[key][value] = 0
+          hash[key][value] = nil
         end
 
         print_idx += 1
@@ -190,31 +202,32 @@ module BusinessesHelper
       puts '' # Newline after the feedback prints.
     else
       puts 'Could not open file'
-      exit(-1)
+      clean_exit
     end
   end
 
   # Requires a hash of users and their personalities.
   def get_personality_summary_hash(users_personality_hash, out_hash)
-    # Make sure to initialize the hash and highest personality values
-    out_hash = Hash.new(0)
-
     # Each personality will be recorded as
     # tallies only.  Don't need to retrieve as percentage.
-    users_personality_hash.each_value do |personality_enum|
-      # Each personality is stored as an enum, so we will use that as key
-      out_hash[personality_enum] += 1
+    users_personality_hash.each do |user, personality|
+      # Only add if they have a valid personality associated
+      if personality.nil?
+        puts "User: #{user} doesn't have a valid personality. Skipping."
+      else
+        puts "User: #{user}, Personality: #{personality}"
 
-      # Record the highest value and type
-      if out_hash[personality_enum] > out_hash[P_HIGHEST_VALUE_KEY]
-        # personality_type_str = Personality.personality_to_str(personality_enum)
-        #
-        # puts "Highest personality type: #{personality_type_str}, " \
-        #      "value: #{out_hash[personality_enum]}"
+        out_hash[personality] += 1
 
-        # Update the new highest personality type/value
-        out_hash[P_HIGHEST_TYPE_KEY] = personality_enum
-        out_hash[P_HIGHEST_VALUE_KEY] = out_hash[personality_enum]
+        # Record the highest value and type
+        if out_hash[personality] > out_hash[P_HIGHEST_VALUE_KEY]
+          puts "Highest personality type: #{personality}, "\
+               "value: #{out_hash[personality]}"
+
+          # Update the new highest personality type/value
+          out_hash[P_HIGHEST_TYPE_KEY] = personality
+          out_hash[P_HIGHEST_VALUE_KEY] = out_hash[personality]
+        end
       end
     end
   end
@@ -270,5 +283,10 @@ module BusinessesHelper
     else
       puts "Could not find #{EXTRACTED_FILEPATH} for deletion"
     end
+  end
+
+  def clean_exit
+    delete_extracted_data
+    exit(-1)
   end
 end
