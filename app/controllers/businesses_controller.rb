@@ -21,10 +21,10 @@ class BusinessesController < ApplicationController
       @found = true
       #https://developers.google.com/chart/interactive/docs/gallery/piechart?csw=1
 
-      # Go through all the personalities and identify if it exists. If it does
-      # then it is added to the pie chart.
       data_table = GoogleVisualr::DataTable.new
 
+      # Go through all the personalities and identify if it exists. If it does
+      # then it is added to the pie chart.
       add_personalities_to_data_table(data_table, business)
 
       # Assigning more colors than the actual number of elements is OK,

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140628094846) do
+ActiveRecord::Schema.define(version: 20140628180940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(version: 20140628094846) do
     t.integer  "num_liberal"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "dominant_type"
+    t.integer  "dominant_value"
   end
 
 end

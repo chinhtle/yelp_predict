@@ -29,8 +29,8 @@ module BusinessesHelper
   USER_PERSONALITY_CSV_NAME = 'personality'
 
   # Personality Summary Constants. P = Personality.
-  P_HIGHEST_TYPE_KEY = 'highest_type'
-  P_HIGHEST_VALUE_KEY = 'highest_value'
+  P_HIGHEST_TYPE_KEY = 'dominant_type'
+  P_HIGHEST_VALUE_KEY = 'dominant_value'
 
   # Used to decide when feedback prints should be printed
   FEEDBACK_PRINT_THRESH = 10000
@@ -39,7 +39,9 @@ module BusinessesHelper
   # This array is used to contain the keys
   # that we're interested in from the data set.  This should be a subset of
   # the business model.
-  BUSINESS_INFO_KEYS = %w(name stars review_count city state)
+  BUSINESS_INFO_KEYS = {name_key: 'name', stars_key: 'stars',
+                        review_count_key: 'review_count', city_key: 'city',
+                        state_key: 'state'}
   BUSINESS_INFO_PATH = "#{BUSINESS_DATA_PATH}/business_info"
   BUSINESS_INFO_FILENAME = 'yelp_academic_dataset_business.json'
   BUSINESS_INFO_FILEPATH = "#{BUSINESS_INFO_PATH}/#{BUSINESS_INFO_FILENAME}"
@@ -47,80 +49,103 @@ module BusinessesHelper
   def load_bus_data
     puts 'Loading business data..'
 
-    # Extract data sets first, and proceed only if successful
-    if extract_data_sets
-      puts 'Extract successful. Proceeding to load from extracted JSON file'
-      business_customers_hash = {}
-      business_info_hash = {}
-      customer_personality_hash = {}
+    begin
+      # Extract data sets first, and proceed only if successful
+      if extract_data_sets
+        puts 'Extract successful. Proceeding to load from extracted JSON file'
+        business_customers_hash = {}
+        business_info_hash = {}
+        customer_personality_hash = {}
 
-      # Load the business reviews JSON
-      load_bus_reviews_to_hash(business_customers_hash,
-                               EXTRACTED_FILEPATH,
-                               HASH_KEY_BUSINESS_ID,
-                               HASH_KEY_USER_ID)
+        # Load the business reviews JSON
+        load_bus_reviews_to_hash(business_customers_hash,
+                                 EXTRACTED_FILEPATH,
+                                 HASH_KEY_BUSINESS_ID,
+                                 HASH_KEY_USER_ID)
 
-      # Load the business information JSON
-      load_bus_info_to_hash(business_info_hash,
-                            BUSINESS_INFO_FILEPATH,
-                            BUSINESS_INFO_KEYS)
+        # Load the business information JSON
+        load_bus_info_to_hash(business_info_hash,
+                              BUSINESS_INFO_FILEPATH,
+                              BUSINESS_INFO_KEYS)
 
-      # Now that we know which users are associated with the businesses,
-      # read in from the users data set file to obtain their associated
-      # personalities.
-      load_csv_to_hash(customer_personality_hash,
-                       USER_DATA_FILEPATH)
+        # Now that we know which users are associated with the businesses,
+        # read in from the users data set file to obtain their associated
+        # personalities.
+        load_csv_to_hash(customer_personality_hash,
+                         USER_DATA_FILEPATH)
 
-      # Associate the business and customer personality hashes.  Store
-      # the personality into the business customer hash
-      retrieve_user_personality(business_customers_hash,
-                                customer_personality_hash)
+        # Associate the business and customer personality hashes.  Store
+        # the personality into the business customer hash
+        retrieve_user_personality(business_customers_hash,
+                                  customer_personality_hash)
 
-      # Now that the data is associated, we can pass the hash of users
-      # with their personality to the method to obtain a summary of the types
-      # of personalities for the business.
-      summarize_and_add_business_to_db(business_customers_hash)
+        # Now that the data is associated, we can pass the hash of users
+        # with their personality to the method to obtain a summary of the types
+        # of personalities for the business.
+        summarize_and_add_business_to_db(business_customers_hash,
+                                         business_info_hash)
+      end
+
+      puts 'Loaded all data successfully.'
+    rescue
+      $stderr.print 'Error while processing: ' + $!
+    ensure
+      # Remember to delete the extracted data set
+      delete_extracted_data
     end
-
-    puts 'Loaded all data successfully.'
-
-    # Remember to delete the extracted data set
-    delete_extracted_data
   end
 
-  def summarize_and_add_business_to_db(business_hash)
+  def summarize_and_add_business_to_db(business_hash, business_info_hash)
     puts 'Summarizing and adding business to DB..'
 
     # Go through each business and get the summary of the personality types
     # and add it to the business database.
     business_hash.each do |business_id, user_hash|
-      # Create a temporary hash used for the output of the summary
-      tmp_hash = Hash.new(0)
+      # Only proceed if we have associated business information in our hash.
+      business_info = business_info_hash[business_id]
 
-      get_personality_summary_hash(user_hash, tmp_hash)
+      if business_info.nil?
+        puts "Skipping. No business info for business-id: #{business_id}."
+      else
+        # Create a temporary hash used for the output of the summary
+        tmp_hash = Hash.new(0)
 
-      puts "Summary for business-#{business_id}:"
+        get_personality_summary_hash(user_hash, tmp_hash)
 
-      # Print the summary for this business.
-      tmp_hash.each do |personality, value|
-        puts "\t#{personality}: #{value}"
+        puts "Summary for business-#{business_id}:"
+
+        # Print the summary for this business.
+        tmp_hash.each do |personality, value|
+          puts "\t#{personality}: #{value}"
+        end
+
+        add_business_to_model_by_hash(business_id, tmp_hash, business_info)
       end
-
-      # Add the new entry to the table
-      # Business.new(id:              business_id,
-      #              dominant_type:   tmp_hash[P_HIGHEST_TYPE_KEY],
-      #              dominant_value:  tmp_hash[P_HIGHEST_VALUE_KEY],
-      #              prosocial:       tmp_hash[Personality::PROSOCIAL],
-      #              risktaker:       tmp_hash[Personality::RISK_TAKER],
-      #              anxious:         tmp_hash[Personality::ANXIOUS],
-      #              passive:         tmp_hash[Personality::PASSIVE],
-      #              perfectionist:   tmp_hash[Personality::PERFECTIONIST],
-      #              critical:        tmp_hash[Personality::CRITICAL],
-      #              conscientious:   tmp_hash[Personality::CONSCIENTIOUS],
-      #              openminded:      tmp_hash[Personality::OPEN_MINDED],
-      #              intuitive:       tmp_hash[Personality::INTUITIVE],
-      #              liberal:         tmp_hash[Personality::LIBERAL])
     end
+  end
+
+  def add_business_to_model_by_hash(business_id, summary_hash,
+                                    business_info_hash)
+    # Add the new entry to the table
+    Business.create(
+      business_id:       business_id,
+      name:              business_info_hash[BUSINESS_INFO_KEYS[:name_key]],
+      stars:             business_info_hash[BUSINESS_INFO_KEYS[:stars_key]],
+      review_count:      business_info_hash[BUSINESS_INFO_KEYS[:review_count_key]],
+      city:              business_info_hash[BUSINESS_INFO_KEYS[:city_key]],
+      state:             business_info_hash[BUSINESS_INFO_KEYS[:state_key]],
+      dominant_type:     summary_hash[P_HIGHEST_TYPE_KEY],
+      dominant_value:    summary_hash[P_HIGHEST_VALUE_KEY],
+      num_prosocial:     summary_hash[Personality::PERSONALITY_KEYS[Personality::PROSOCIAL]],
+      num_risktaker:     summary_hash[Personality::PERSONALITY_KEYS[Personality::RISK_TAKER]],
+      num_anxious:       summary_hash[Personality::PERSONALITY_KEYS[Personality::ANXIOUS]],
+      num_passive:       summary_hash[Personality::PERSONALITY_KEYS[Personality::PASSIVE]],
+      num_perfectionist: summary_hash[Personality::PERSONALITY_KEYS[Personality::PERFECTIONIST]],
+      num_critical:      summary_hash[Personality::PERSONALITY_KEYS[Personality::CRITICAL]],
+      num_conscientious: summary_hash[Personality::PERSONALITY_KEYS[Personality::CONSCIENTIOUS]],
+      num_openminded:    summary_hash[Personality::PERSONALITY_KEYS[Personality::OPEN_MINDED]],
+      num_intuitive:     summary_hash[Personality::PERSONALITY_KEYS[Personality::INTUITIVE]],
+      num_liberal:       summary_hash[Personality::PERSONALITY_KEYS[Personality::LIBERAL]])
   end
 
   def load_bus_info_to_hash(business_info_hash, filepath, business_info_keys)
@@ -138,7 +163,7 @@ module BusinessesHelper
         business_id = data_hash[HASH_KEY_BUSINESS_ID]
 
         # For each line, go through the array to retrieve the associated values.
-        business_info_keys.each do |info_key|
+        business_info_keys.each_value do |info_key|
           value = data_hash[info_key]
 
           puts "Business: #{business_id}"
@@ -163,7 +188,6 @@ module BusinessesHelper
       puts '' # Newline after the feedback prints.
     else
       puts 'Could not open file'
-      clean_exit
     end
   end
 
@@ -220,7 +244,6 @@ module BusinessesHelper
       puts '' # Newline after the feedback prints.
     else
       puts "User CSV file does not exist!"
-      clean_exit
     end
   end
 
@@ -262,7 +285,6 @@ module BusinessesHelper
       puts '' # Newline after the feedback prints.
     else
       puts 'Could not open file'
-      clean_exit
     end
   end
 
@@ -348,45 +370,40 @@ module BusinessesHelper
     end
   end
 
-  def clean_exit
-    delete_extracted_data
-    exit(-1)
-  end
-
   def add_personalities_to_data_table(table, business)
     table.new_column('string', 'Personality')
     table.new_column('number', 'Matches')
 
     table.add_rows(11)
     table.set_cell(Personality::PROSOCIAL, 0,
-                   Personality::personality_to_str(Personality::PROSOCIAL))
+                   Personality::PERSONALITY_KEYS[Personality::PROSOCIAL])
     table.set_cell(Personality::PROSOCIAL, 1, business.num_prosocial)
     table.set_cell(Personality::RISK_TAKER, 0,
-                   Personality::personality_to_str(Personality::RISK_TAKER))
+                   Personality::PERSONALITY_KEYS[Personality::RISK_TAKER])
     table.set_cell(Personality::RISK_TAKER, 1, business.num_risktaker)
     table.set_cell(Personality::ANXIOUS, 0,
-                   Personality::personality_to_str(Personality::ANXIOUS))
+                   Personality::PERSONALITY_KEYS[Personality::ANXIOUS])
     table.set_cell(Personality::ANXIOUS, 1,  business.num_anxious)
     table.set_cell(Personality::PASSIVE, 0,
-                   Personality::personality_to_str(Personality::PASSIVE))
+                   Personality::PERSONALITY_KEYS[Personality::PASSIVE])
     table.set_cell(Personality::PASSIVE, 1,  business.num_passive)
     table.set_cell(Personality::PERFECTIONIST, 0,
-                   Personality::personality_to_str(Personality::PERFECTIONIST))
+                   Personality::PERSONALITY_KEYS[Personality::PERFECTIONIST])
     table.set_cell(Personality::PERFECTIONIST, 1, business.num_perfectionist)
     table.set_cell(Personality::CRITICAL, 0,
-                   Personality::personality_to_str(Personality::CRITICAL))
+                   Personality::PERSONALITY_KEYS[Personality::CRITICAL])
     table.set_cell(Personality::CRITICAL, 1, business.num_critical)
     table.set_cell(Personality::CONSCIENTIOUS, 0,
-                   Personality::personality_to_str(Personality::CONSCIENTIOUS))
+                   Personality::PERSONALITY_KEYS[Personality::CONSCIENTIOUS])
     table.set_cell(Personality::CONSCIENTIOUS, 1,  business.num_conscientious)
     table.set_cell(Personality::OPEN_MINDED, 0,
-                   Personality::personality_to_str(Personality::OPEN_MINDED))
+                   Personality::PERSONALITY_KEYS[Personality::OPEN_MINDED])
     table.set_cell(Personality::OPEN_MINDED, 1,  business.num_openminded)
     table.set_cell(Personality::INTUITIVE, 0,
-                   Personality::personality_to_str(Personality::INTUITIVE))
+                   Personality::PERSONALITY_KEYS[Personality::INTUITIVE])
     table.set_cell(Personality::INTUITIVE, 1,  business.num_intuitive)
     table.set_cell(Personality::LIBERAL, 0,
-                   Personality::personality_to_str(Personality::LIBERAL))
+                   Personality::PERSONALITY_KEYS[Personality::LIBERAL])
     table.set_cell(Personality::LIBERAL, 1,  business.num_liberal)
   end
 end
