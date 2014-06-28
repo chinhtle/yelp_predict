@@ -8,14 +8,15 @@ module BusinessesHelper
   CURR_DIR = File.dirname(__FILE__)
   DATA_PATH = File.join(CURR_DIR, '../../yelp_data')
   BUSINESS_DATA_PATH = "#{DATA_PATH}/business_data"
+  BUSINESS_REVIEWS_PATH = "#{BUSINESS_DATA_PATH}/business_reviews"
 
-  # Business Data Set Constants
+  # Business Reviews Data Set Constants
   DATASET_PREFIX = 'yelp_business_data_set'
   COMPRESSED_EXT = 'tar.gz'
   EXTRACTED_DATA_EXT = 'json'
   EXTRACTED_DATA_FILE_OPTIONS = 'a+' # Reading and appending. Create if needed
   EXTRACTED_FILENAME = "#{DATASET_PREFIX}.#{EXTRACTED_DATA_EXT}"
-  EXTRACTED_FILEPATH = "#{BUSINESS_DATA_PATH}/#{EXTRACTED_FILENAME}"
+  EXTRACTED_FILEPATH = "#{BUSINESS_REVIEWS_PATH}/#{EXTRACTED_FILENAME}"
 
   # Hash Key Constants
   HASH_KEY_BUSINESS_ID = 'business_id'
@@ -34,6 +35,10 @@ module BusinessesHelper
   # Used to decide when feedback prints should be printed
   FEEDBACK_PRINT_THRESH = 10000
 
+  # Business Info Array.  This array is used to contain the keys
+  # that we're interested in from the data set.  This should reflect
+  # the business model.
+  BUSINESS_INFO_KEYS = ['']
   def load_bus_data
     puts 'Loading business data..'
 
@@ -105,6 +110,10 @@ module BusinessesHelper
       #              intuitive:       tmp_hash[Personality::INTUITIVE],
       #              liberal:         tmp_hash[Personality::LIBERAL])
     end
+  end
+
+  def retrieve_business_info(business_info_hash)
+
   end
 
   def retrieve_user_personality(business_hash, customer_personality_hash)
@@ -233,11 +242,11 @@ module BusinessesHelper
   end
 
   def extract_data_sets
-    puts "Extracting data sets from path: #{BUSINESS_DATA_PATH}"
+    puts "Extracting business review data from path: #{BUSINESS_REVIEWS_PATH}"
 
     # Since there are more than one data set, identify how many files are in
     # the business data path.
-    num_files = Dir.glob(File.join(BUSINESS_DATA_PATH, '**', '*')).select {
+    num_files = Dir.glob(File.join(BUSINESS_REVIEWS_PATH, '**', '*')).select {
                   |file| File.file?(file)
                 }.count
 
@@ -250,7 +259,7 @@ module BusinessesHelper
 
       while index <= num_files do
         # Iterate through each tar
-        file_path = "#{BUSINESS_DATA_PATH}/" \
+        file_path = "#{BUSINESS_REVIEWS_PATH}/" \
                     "#{DATASET_PREFIX}_#{index}.#{COMPRESSED_EXT}"
 
         tar_extract = Gem::Package::TarReader.new(
