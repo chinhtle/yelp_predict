@@ -35,10 +35,15 @@ module BusinessesHelper
   # Used to decide when feedback prints should be printed
   FEEDBACK_PRINT_THRESH = 10000
 
-  # Business Info Array.  This array is used to contain the keys
-  # that we're interested in from the data set.  This should reflect
+  # Business Info Constants:
+  # This array is used to contain the keys
+  # that we're interested in from the data set.  This should be a subset of
   # the business model.
-  BUSINESS_INFO_KEYS = ['']
+  BUSINESS_INFO_KEYS = %w(name stars review_count city state)
+  BUSINESS_INFO_PATH = "#{BUSINESS_DATA_PATH}/business_info"
+  BUSINESS_INFO_FILENAME = 'yelp_academic_dataset_business.json'
+  BUSINESS_INFO_FILEPATH = "#{BUSINESS_INFO_PATH}/#{BUSINESS_INFO_FILENAME}"
+
   def load_bus_data
     puts 'Loading business data..'
 
@@ -46,13 +51,19 @@ module BusinessesHelper
     if extract_data_sets
       puts 'Extract successful. Proceeding to load from extracted JSON file'
       business_customers_hash = {}
+      business_info_hash = {}
       customer_personality_hash = {}
 
-      # Load the business JSON
-      load_json_to_hash(business_customers_hash,
-                        EXTRACTED_FILEPATH,
-                        HASH_KEY_BUSINESS_ID,
-                        HASH_KEY_USER_ID)
+      # Load the business reviews JSON
+      load_bus_reviews_to_hash(business_customers_hash,
+                               EXTRACTED_FILEPATH,
+                               HASH_KEY_BUSINESS_ID,
+                               HASH_KEY_USER_ID)
+
+      # Load the business information JSON
+      load_bus_info_to_hash(business_info_hash,
+                            BUSINESS_INFO_FILEPATH,
+                            BUSINESS_INFO_KEYS)
 
       # Now that we know which users are associated with the businesses,
       # read in from the users data set file to obtain their associated
@@ -112,8 +123,48 @@ module BusinessesHelper
     end
   end
 
-  def retrieve_business_info(business_info_hash)
+  def load_bus_info_to_hash(business_info_hash, filepath, business_info_keys)
+    puts 'Loading Business Info JSON to hash.'
 
+    # Check if the file exists
+    if File.file?(filepath)
+      print_idx = 0
+
+      File.open(filepath, 'r').each do |line|
+        # Parse JSON
+        data_hash = JSON.parse(line)
+
+        # Each business is represented by a business_id.
+        business_id = data_hash[HASH_KEY_BUSINESS_ID]
+
+        # For each line, go through the array to retrieve the associated values.
+        business_info_keys.each do |info_key|
+          value = data_hash[info_key]
+
+          puts "Business: #{business_id}"
+          puts "Key: #{info_key}, Value: #{value}"
+
+          # Print feedback every N records processed
+          if print_idx % FEEDBACK_PRINT_THRESH == 0
+            print '.'
+          end
+
+          # For this business, add the info.  If nil, create new hash first.
+          if business_info_hash[business_id].nil?
+            business_info_hash[business_id] = Hash.new
+          end
+
+          business_info_hash[business_id][info_key] = value
+
+          print_idx += 1
+        end
+      end
+
+      puts '' # Newline after the feedback prints.
+    else
+      puts 'Could not open file'
+      clean_exit
+    end
   end
 
   def retrieve_user_personality(business_hash, customer_personality_hash)
@@ -173,8 +224,8 @@ module BusinessesHelper
     end
   end
 
-  def load_json_to_hash(hash, filepath, primary_key, secondary_key)
-    puts "Loading JSON to hash. Primary: #{primary_key}, " \
+  def load_bus_reviews_to_hash(hash, filepath, primary_key, secondary_key)
+    puts "Loading Business Reviews JSON to hash. Primary: #{primary_key}, " \
          "Secondary: #{secondary_key}"
 
     # Check if the file exists
@@ -242,6 +293,9 @@ module BusinessesHelper
   end
 
   def extract_data_sets
+    # Clean existing extracted file if it currently exists
+    delete_extracted_data
+
     puts "Extracting business review data from path: #{BUSINESS_REVIEWS_PATH}"
 
     # Since there are more than one data set, identify how many files are in
