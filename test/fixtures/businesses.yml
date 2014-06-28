@@ -1,0 +1,37 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  business_id: MyString
+  name: MyString
+  stars: 1.5
+  review_count: 1
+  city: MyString
+  state: MyString
+  num_prosocial: 1
+  num_risktaker: 1
+  num_anxious: 1
+  num_passive: 1
+  num_perfectionist: 1
+  num_critical: 1
+  num_conscientious: 1
+  num_openminded: 1
+  num_intuitive: 1
+  num_liberal: 1
+
+two:
+  business_id: MyString
+  name: MyString
+  stars: 1.5
+  review_count: 1
+  city: MyString
+  state: MyString
+  num_prosocial: 1
+  num_risktaker: 1
+  num_anxious: 1
+  num_passive: 1
+  num_perfectionist: 1
+  num_critical: 1
+  num_conscientious: 1
+  num_openminded: 1
+  num_intuitive: 1
+  num_liberal: 1
