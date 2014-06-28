@@ -1,15 +1,15 @@
 class Personality
-  NONE          = 0
-  PROSOCIAL     = 1   # Sweet
-  RISK_TAKER    = 2   # Spicy
-  ANXIOUS       = 3   # Salty
-  PASSIVE       = 4   # Comfort Foods
-  PERFECTIONIST = 5   # Crunchy
-  CRITICAL      = 6   # Tart/Sour
-  CONSCIENTIOUS = 7   # Citrus
-  OPEN_MINDED   = 8   # Exotic Foods
-  INTUITIVE     = 9   # Chocolate
-  LIBERAL       = 10  # Alcohol
+  NONE          = -1
+  PROSOCIAL     = 0   # Sweet
+  RISK_TAKER    = 1   # Spicy
+  ANXIOUS       = 2   # Salty
+  PASSIVE       = 3   # Comfort Foods
+  PERFECTIONIST = 4   # Crunchy
+  CRITICAL      = 5   # Tart/Sour
+  CONSCIENTIOUS = 6   # Citrus
+  OPEN_MINDED   = 7   # Exotic Foods
+  INTUITIVE     = 8   # Chocolate
+  LIBERAL       = 9   # Alcohol
 
   # Add new personality types above and assign last as max.
   MAX           = LIBERAL

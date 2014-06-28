@@ -352,4 +352,41 @@ module BusinessesHelper
     delete_extracted_data
     exit(-1)
   end
+
+  def add_personalities_to_data_table(table, business)
+    table.new_column('string', 'Personality')
+    table.new_column('number', 'Matches')
+
+    table.add_rows(11)
+    table.set_cell(Personality::PROSOCIAL, 0,
+                   Personality::personality_to_str(Personality::PROSOCIAL))
+    table.set_cell(Personality::PROSOCIAL, 1, business.num_prosocial)
+    table.set_cell(Personality::RISK_TAKER, 0,
+                   Personality::personality_to_str(Personality::RISK_TAKER))
+    table.set_cell(Personality::RISK_TAKER, 1, business.num_risktaker)
+    table.set_cell(Personality::ANXIOUS, 0,
+                   Personality::personality_to_str(Personality::ANXIOUS))
+    table.set_cell(Personality::ANXIOUS, 1,  business.num_anxious)
+    table.set_cell(Personality::PASSIVE, 0,
+                   Personality::personality_to_str(Personality::PASSIVE))
+    table.set_cell(Personality::PASSIVE, 1,  business.num_passive)
+    table.set_cell(Personality::PERFECTIONIST, 0,
+                   Personality::personality_to_str(Personality::PERFECTIONIST))
+    table.set_cell(Personality::PERFECTIONIST, 1, business.num_perfectionist)
+    table.set_cell(Personality::CRITICAL, 0,
+                   Personality::personality_to_str(Personality::CRITICAL))
+    table.set_cell(Personality::CRITICAL, 1, business.num_critical)
+    table.set_cell(Personality::CONSCIENTIOUS, 0,
+                   Personality::personality_to_str(Personality::CONSCIENTIOUS))
+    table.set_cell(Personality::CONSCIENTIOUS, 1,  business.num_conscientious)
+    table.set_cell(Personality::OPEN_MINDED, 0,
+                   Personality::personality_to_str(Personality::OPEN_MINDED))
+    table.set_cell(Personality::OPEN_MINDED, 1,  business.num_openminded)
+    table.set_cell(Personality::INTUITIVE, 0,
+                   Personality::personality_to_str(Personality::INTUITIVE))
+    table.set_cell(Personality::INTUITIVE, 1,  business.num_intuitive)
+    table.set_cell(Personality::LIBERAL, 0,
+                   Personality::personality_to_str(Personality::LIBERAL))
+    table.set_cell(Personality::LIBERAL, 1,  business.num_liberal)
+  end
 end

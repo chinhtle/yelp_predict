@@ -1,22 +1,13 @@
-<!-- title, scripts, css etc go here -->
-<script src='https://www.google.com/jsapi'></script>
+<h1>Business Homepage</h1>
 
-<!-- Hackery! This is not truly responsive.  Only simulates responsiveness
-     by causing the page to refresh, which utilizes the chart's width: 100%
-     to adjust to the page. -->
-<script>
-    $(document).ready(function() {
-        $(window).resize(function(){
-            $('body').load(window.location.pathname);
-        });
-    });
-</script>
-<noscript>
-    <meta http-equiv="refresh" content="2;url=http://yoursite.com/nojswarning.html">
-</noscript>
-<div class="container">
-    <h1>Business Homepage</h1>
-
-    <div id='chart' style="width: 100%"></div>
-    <%= render_chart @chart, 'chart' %>
-</div>
+<%= form_tag(business_summary_path, method: "post") do %>
+  <div class="col-lg-6 col-md-offset-3">
+    <div class="input-group">
+      <%= text_field "business_params", "name", class: "form-control", placeholder: "Please enter a business name" %>
+      <span class="input-group-btn">
+    	    	<%= button_to "Submit", user_result_path , class: "btn btn-default", method: :post %>
+      		</span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+  </span>
+<% end %>

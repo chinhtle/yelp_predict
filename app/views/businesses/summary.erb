@@ -1,0 +1,22 @@
+<!-- title, scripts, css etc go here -->
+<script src='https://www.google.com/jsapi'></script>
+
+<!-- Hackery! This is not truly responsive.  Only simulates responsiveness
+     by causing the page to refresh, which utilizes the chart's width: 100%
+     to adjust to the page. -->
+<script>
+  $(document).ready(function() {
+    $(window).resize(function(){
+      $('body').load(window.location.pathname);
+    });
+  });
+</script>
+<noscript>
+  <meta http-equiv="refresh" content="2;url=http://yoursite.com/nojswarning.html">
+</noscript>
+<div class="container">
+  <h1>Business Summary Page</h1>
+
+  <div id='chart' style="width: 100%"></div>
+  <%= render_chart @chart, 'chart' if @found %>
+</div>
