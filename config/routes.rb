@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   root 'predict#index'
   #resources :predict
   #resources :users
-  resources :businesses
+  resources :businesses do
+    get :autocomplete_business_name, :on => :collection
+  end
 
   match '/user',              to: 'users#index',        via: 'get'
   match '/user/result',       to: 'users#result',       via: 'post'

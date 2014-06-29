@@ -48,4 +48,7 @@ gem 'tzinfo-data'
 
 gem 'nokogiri'
 
+gem 'rails4-autocomplete'
+gem 'jquery-ui-rails'
+
 ruby "1.9.3"

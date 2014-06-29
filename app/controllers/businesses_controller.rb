@@ -2,6 +2,7 @@ require 'personality'
 
 class BusinessesController < ApplicationController
   include BusinessesHelper
+  autocomplete :business, :name, :full => true
 
   # Business search constants:
   BUSINESS_SEARCH_BY = 'name'
