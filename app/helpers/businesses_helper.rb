@@ -50,7 +50,7 @@ module BusinessesHelper
   # Heroku DB limit is 10k for free, basic, service.  We will use 9500.
   # Since only storing businesses, it would not affect our application.
   # Set at 9500 in case we want to add other dynamic business crawlers.
-  HEROKU_DB_RECORD_LIMIT = 9000
+  HEROKU_DB_RECORD_LIMIT = 9500
 
   def load_bus_data
     puts 'Loading business data..'
@@ -133,7 +133,7 @@ module BusinessesHelper
   def add_business_to_model_by_hash(business_id, summary_hash,
                                     business_info_hash)
     # Add the new entry to the table
-    if Business.count <= HEROKU_DB_RECORD_LIMIT
+    if Business.count < HEROKU_DB_RECORD_LIMIT
       Business.create(
         business_id:       business_id,
         name:              business_info_hash[BUSINESS_INFO_KEYS[:name_key]],
@@ -373,8 +373,6 @@ module BusinessesHelper
     puts 'Deleting extracted data..'
     if File.file?(EXTRACTED_FILEPATH)
       File.delete(EXTRACTED_FILEPATH)
-    else
-      puts "Could not find #{EXTRACTED_FILEPATH} for deletion"
     end
   end
 
