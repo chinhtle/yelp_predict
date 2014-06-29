@@ -11,8 +11,13 @@ class BusinessesController < ApplicationController
     # TODO: For now it has to be an exact match.  Need to accept non-exacts.
     business_name = params[:business_params][:name]
 
-    # Perform a lookup using the business name
-    business = Business.find_by(name: business_name)
+    # Perform a lookup using the business name.  This will also have partial
+    # matching.
+    businesses = Business.where("name LIKE ?", "%#{business_name}%")
+
+    # TODO: For now, get the first business until a search results page is
+    # developed.
+    business = businesses.first if businesses != nil
 
     # Only proceed if a business was found, otherwise set found to false
     if business.nil?
@@ -39,7 +44,6 @@ class BusinessesController < ApplicationController
                              {color: '#B39EB5'}, {color: '#FDFD96'}]
 
       opts   = { :height => 400,
-                 # :title => 'My Daily Activities',
                  :pieHole => 0.5, :legend => {position: 'bottom', maxLines: 3},
                  :slices => slice_pastel_colors}
 
