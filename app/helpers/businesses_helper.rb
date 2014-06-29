@@ -46,6 +46,12 @@ module BusinessesHelper
   BUSINESS_INFO_FILENAME = 'yelp_academic_dataset_business.json'
   BUSINESS_INFO_FILEPATH = "#{BUSINESS_INFO_PATH}/#{BUSINESS_INFO_FILENAME}"
 
+  # Heroku Constants:
+  # Heroku DB limit is 10k for free, basic, service.  We will use 9500.
+  # Since only storing businesses, it would not affect our application.
+  # Set at 9500 in case we want to add other dynamic business crawlers.
+  HEROKU_DB_RECORD_LIMIT = 9000
+
   def load_bus_data
     puts 'Loading business data..'
 
@@ -127,25 +133,27 @@ module BusinessesHelper
   def add_business_to_model_by_hash(business_id, summary_hash,
                                     business_info_hash)
     # Add the new entry to the table
-    Business.create(
-      business_id:       business_id,
-      name:              business_info_hash[BUSINESS_INFO_KEYS[:name_key]],
-      stars:             business_info_hash[BUSINESS_INFO_KEYS[:stars_key]],
-      review_count:      business_info_hash[BUSINESS_INFO_KEYS[:review_count_key]],
-      city:              business_info_hash[BUSINESS_INFO_KEYS[:city_key]],
-      state:             business_info_hash[BUSINESS_INFO_KEYS[:state_key]],
-      dominant_type:     summary_hash[P_HIGHEST_TYPE_KEY],
-      dominant_value:    summary_hash[P_HIGHEST_VALUE_KEY],
-      num_prosocial:     summary_hash[Personality::PERSONALITY_KEYS[Personality::PROSOCIAL]],
-      num_risktaker:     summary_hash[Personality::PERSONALITY_KEYS[Personality::RISK_TAKER]],
-      num_anxious:       summary_hash[Personality::PERSONALITY_KEYS[Personality::ANXIOUS]],
-      num_passive:       summary_hash[Personality::PERSONALITY_KEYS[Personality::PASSIVE]],
-      num_perfectionist: summary_hash[Personality::PERSONALITY_KEYS[Personality::PERFECTIONIST]],
-      num_critical:      summary_hash[Personality::PERSONALITY_KEYS[Personality::CRITICAL]],
-      num_conscientious: summary_hash[Personality::PERSONALITY_KEYS[Personality::CONSCIENTIOUS]],
-      num_openminded:    summary_hash[Personality::PERSONALITY_KEYS[Personality::OPEN_MINDED]],
-      num_intuitive:     summary_hash[Personality::PERSONALITY_KEYS[Personality::INTUITIVE]],
-      num_liberal:       summary_hash[Personality::PERSONALITY_KEYS[Personality::LIBERAL]])
+    if Business.count <= HEROKU_DB_RECORD_LIMIT
+      Business.create(
+        business_id:       business_id,
+        name:              business_info_hash[BUSINESS_INFO_KEYS[:name_key]],
+        stars:             business_info_hash[BUSINESS_INFO_KEYS[:stars_key]],
+        review_count:      business_info_hash[BUSINESS_INFO_KEYS[:review_count_key]],
+        city:              business_info_hash[BUSINESS_INFO_KEYS[:city_key]],
+        state:             business_info_hash[BUSINESS_INFO_KEYS[:state_key]],
+        dominant_type:     summary_hash[P_HIGHEST_TYPE_KEY],
+        dominant_value:    summary_hash[P_HIGHEST_VALUE_KEY],
+        num_prosocial:     summary_hash[Personality::PERSONALITY_KEYS[Personality::PROSOCIAL]],
+        num_risktaker:     summary_hash[Personality::PERSONALITY_KEYS[Personality::RISK_TAKER]],
+        num_anxious:       summary_hash[Personality::PERSONALITY_KEYS[Personality::ANXIOUS]],
+        num_passive:       summary_hash[Personality::PERSONALITY_KEYS[Personality::PASSIVE]],
+        num_perfectionist: summary_hash[Personality::PERSONALITY_KEYS[Personality::PERFECTIONIST]],
+        num_critical:      summary_hash[Personality::PERSONALITY_KEYS[Personality::CRITICAL]],
+        num_conscientious: summary_hash[Personality::PERSONALITY_KEYS[Personality::CONSCIENTIOUS]],
+        num_openminded:    summary_hash[Personality::PERSONALITY_KEYS[Personality::OPEN_MINDED]],
+        num_intuitive:     summary_hash[Personality::PERSONALITY_KEYS[Personality::INTUITIVE]],
+        num_liberal:       summary_hash[Personality::PERSONALITY_KEYS[Personality::LIBERAL]])
+    end
   end
 
   def load_bus_info_to_hash(business_info_hash, filepath, business_info_keys)
