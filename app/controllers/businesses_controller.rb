@@ -13,25 +13,28 @@ class BusinessesController < ApplicationController
   def index
   end
 
-  def summary
+  def results
     # Interpret the business name from post.
-    # TODO: For now it has to be an exact match.  Need to accept non-exacts.
-    business_name = params[:business_params][:name]
+    @business_name = params[:business_params][:name]
 
     # Perform a lookup using the business name.  This will also have partial
     # matching.
-    businesses = Business.where("lower(#{BUSINESS_SEARCH_BY}) LIKE ?",
-                                "%#{business_name.downcase}%").order(
-                                    BUSINESS_SEARCH_ORDER_STR)
+    @search_results = Business.where("lower(#{BUSINESS_SEARCH_BY}) LIKE ?",
+                                     "%#{@business_name.downcase}%").order(
+                                       BUSINESS_SEARCH_ORDER_STR)
 
-    # TODO: For now, get the first business until a search results page is
-    # developed.
-    business = businesses.first if businesses != nil
+    # If only 1 result, go directly to summary
+    if @search_results && @search_results.count == 1
+      curr_business = @search_results.first
+      redirect_to "#{businesses_path}/#{curr_business.id}"
+    end
+  end
 
-    # Only proceed if a business was found, otherwise set found to false
-    if business.nil?
-      @found = false
-    else
+  def show
+    begin
+      # Perform a search given the internally assigned business_id.
+      business = Business.find(params[:id])
+
       @found = true
       #https://developers.google.com/chart/interactive/docs/gallery/piechart?csw=1
 
@@ -57,6 +60,8 @@ class BusinessesController < ApplicationController
                  :slices => slice_pastel_colors}
 
       @chart = GoogleVisualr::Interactive::PieChart.new(data_table, opts)
+    rescue ActiveRecord::RecordNotFound
+      @found = false
     end
   end
 end

@@ -52,6 +52,10 @@ module BusinessesHelper
   # Set at 9500 in case we want to add other dynamic business crawlers.
   HEROKU_DB_RECORD_LIMIT = 9500
 
+  # Some table configurations
+  RESULTS_TABLE_CONFIGS = '' # No particular configs for now..
+  RESULTS_TABLE_CLASSES = 'table table-hover'
+
   def load_bus_data
     puts 'Loading business data..'
 
@@ -411,5 +415,36 @@ module BusinessesHelper
     table.set_cell(Personality::LIBERAL, 0,
                    Personality::PERSONALITY_KEYS[Personality::LIBERAL])
     table.set_cell(Personality::LIBERAL, 1,  business.num_liberal)
+  end
+
+  def print_businesses_search_results(results, business_name)
+    if results
+      # Iterate through the results and add it to a table.
+      res = "<table class=\"#{RESULTS_TABLE_CLASSES}\" "\
+            "#{RESULTS_TABLE_CONFIGS}>"
+
+      results.each do |business|
+        # Add row/cell
+        res << '<tr><td>'
+
+        # Make the row clickable
+        res << "<a href=\"#{businesses_path}/#{business.id}\">"
+
+        # Add the row content:
+        res << "<b>#{business.name}</b> - #{business.city}, #{business.state}"
+
+        # Close off the link
+        res << '</a>'
+
+        # Close off this row/cell.
+        res << '</td></tr>'
+      end
+
+      res << '</table>'
+    else
+      res = "<h2>No results for <i><b>#{business_name}</b></i></h2>"
+    end
+
+    return res.html_safe
   end
 end

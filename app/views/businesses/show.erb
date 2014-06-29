@@ -17,6 +17,10 @@
 <div class="container">
   <h1>Business Summary Page</h1>
 
-  <div id='chart' style="width: 100%"></div>
-  <%= render_chart @chart, 'chart' if @found %>
+  <% if @found %>
+    <div id='chart' style="width: 100%"></div>
+    <%= render_chart @chart, 'chart' %>
+  <% else %>
+    <h2>Invalid Business ID</h2>
+  <% end %>
 </div>

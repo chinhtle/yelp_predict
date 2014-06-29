@@ -5,12 +5,11 @@ Rails.application.routes.draw do
   root 'predict#index'
   #resources :predict
   #resources :users
-  #resources :businesses
+  resources :businesses
 
   match '/user',              to: 'users#index',        via: 'get'
   match '/user/result',       to: 'users#result',       via: 'post'
-  match '/business',          to: 'businesses#index',   via: 'get'
-  match '/business/summary',  to: 'businesses#summary', via: 'post'
+  match '/business/results',  to: 'businesses#results', via: 'post'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

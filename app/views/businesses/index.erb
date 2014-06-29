@@ -1,11 +1,11 @@
 <h1>Business Homepage</h1>
 
-<%= form_tag(business_summary_path, method: "post") do %>
+<%= form_tag(business_results_path, method: "post") do %>
   <div class="col-lg-6 col-md-offset-3">
     <div class="input-group">
       <%= text_field "business_params", "name", class: "form-control", placeholder: "Please enter a business name" %>
       <span class="input-group-btn">
-    	    	<%= button_to "Submit", user_result_path , class: "btn btn-default", method: :post %>
+    	    	<%= button_to "Submit", business_results_path , class: "btn btn-default", method: :post %>
       		</span>
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
