@@ -52,4 +52,15 @@ class Personality
                       Personality::OPEN_MINDED   => 'Open minded',
                       Personality::INTUITIVE     => 'Intuitive',
                       Personality::LIBERAL       => 'Liberal'}
+
+  PERSONALITY_NUM_KEYS = {Personality::PROSOCIAL     => 'num_prosocial',
+                          Personality::RISK_TAKER    => 'num_risktaker',
+                          Personality::ANXIOUS       => 'num_anxious',
+                          Personality::PASSIVE       => 'num_passive',
+                          Personality::PERFECTIONIST => 'num_perfectionist',
+                          Personality::CRITICAL      => 'num_critical',
+                          Personality::CONSCIENTIOUS => 'num_conscientious',
+                          Personality::OPEN_MINDED   => 'num_openminded',
+                          Personality::INTUITIVE     => 'num_intuitive',
+                          Personality::LIBERAL       => 'num_liberal'}
 end

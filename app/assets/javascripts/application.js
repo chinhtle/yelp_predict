@@ -16,4 +16,7 @@
 //= require turbolinks
 //= require bootstrap
 //= require autocomplete-rails
+//= require highcharts/highcharts
+//= require highcharts/highcharts-more
+//= require highcharts/highstock
 //= require_tree .

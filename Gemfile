@@ -51,4 +51,6 @@ gem 'nokogiri'
 gem 'rails4-autocomplete'
 gem 'jquery-ui-rails'
 
+gem 'lazy_high_charts'
+
 ruby "1.9.3"

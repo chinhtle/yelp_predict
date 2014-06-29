@@ -447,4 +447,83 @@ module BusinessesHelper
 
     return res.html_safe
   end
+
+  def render_google_visualr_chart(business_hash)
+    #https://developers.google.com/chart/interactive/docs/gallery/piechart?csw=1
+
+    data_table = GoogleVisualr::DataTable.new
+
+    # Go through all the personalities and identify if it exists. If it does
+    # then it is added to the pie chart.
+    add_personalities_to_data_table(data_table, business_hash)
+
+    # Assigning more colors than the actual number of elements is OK,
+    # but if there are more elements than colors then the scheme will be
+    # off! Make sure there are enough pastel colors! We will assume
+    # there will not be more elements, ever, than the actual number
+    # of pastel colors.
+    slice_pastel_colors = [{color: '#DEA5A4'}, {color: '#77DD77'},
+                           {color: '#AEC6CF'}, {color: '#B39EB5'},
+                           {color: '#CB99C9'}, {color: '#779ECB'},
+                           {color: '#836953'}, {color: '#FF6961'},
+                           {color: '#B39EB5'}, {color: '#FDFD96'}]
+
+    opts   = { :height => 400,
+               :pieHole => 0.5, :legend => {position: 'bottom', maxLines: 3},
+               :slices => slice_pastel_colors}
+
+    @chart = GoogleVisualr::Interactive::PieChart.new(data_table, opts)
+  end
+
+  def render_high_charts(business_hash)
+    data_array = []
+    @all_personalities = 0
+
+    # Get total personality count, which will be used for percentage.
+    Personality::PERSONALITY_KEYS.each_key do |key|
+      @all_personalities += business_hash[Personality::PERSONALITY_NUM_KEYS[key]]
+    end
+
+    # Create the data array from the different types of personalities.
+    Personality::PERSONALITY_KEYS.each do |key, p_type|
+      curr_type_val = business_hash[Personality::PERSONALITY_NUM_KEYS[key]]
+
+      # Only add it to the data array if it has a non-zero value
+      if curr_type_val > 0
+        # At each point, check if it is the highest recorded personality type.
+        # If it is, then it will be the default selected slice.
+        if p_type == business_hash[P_HIGHEST_TYPE_KEY]
+          # Since it is the highest, we will make it default selected. This
+          # requires making a new hash
+          slice_data = {name: p_type, y: curr_type_val,
+                        sliced: true, selected: true}
+        else
+          slice_data = [p_type, curr_type_val]
+        end
+
+        # Add it to the data array
+        data_array.push(slice_data)
+      end
+    end
+
+    @chart = LazyHighCharts::HighChart.new('pie') do |f|
+      f.chart({:defaultSeriesType=>"pie" , :margin=> [50, 200, 60, 170]} )
+      series = {
+        :type=> 'pie',
+        :name=> 'Personality Summary',
+        :data=> data_array
+      }
+      f.series(series)
+      # f.options[:title][:text] = "Personality Summary"
+      f.legend(:layout=> 'vertical',:style=> {:left=> 'auto', :bottom=> 'auto',
+                                              :right=> '50px',:top=> '100px'})
+      f.plot_options(:pie=>{:allowPointSelect=>true,
+                            :cursor=>"pointer" ,
+                            :dataLabels=>{:enabled=>true,
+                                          :color=>"black",
+                                          :style=>{:font=>"13px Trebuchet MS, "\
+                                                          "Verdana, "\
+                                                          "sans-serif"}}})
+    end
+  end
 end

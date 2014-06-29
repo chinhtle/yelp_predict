@@ -19,7 +19,18 @@
 
   <% if @found %>
     <div id='chart' style="width: 100%"></div>
-    <%= render_chart @chart, 'chart' %>
+    <% if @pie_chart_google_visualr %>
+      <%= render_chart @chart, 'chart' %>
+    <% else %>
+      <%= high_chart('chart', @chart) do |c| %>
+        <%= raw "options.tooltip.formatter = function() "\
+                "{return '<b>' + this.point.name +'</b>: '+ "\
+                "this.y;}"  %>
+        <%= raw "options.plotOptions.pie.dataLabels.formatter = function() "\
+                "{return '<b>' + this.point.name +'</b>: '+ "\
+                "((this.y/#{@all_personalities})*100).toFixed(1) +' %';}"  %>
+      <% end %>
+    <% end %>
   <% else %>
     <h2>Invalid Business ID</h2>
   <% end %>
