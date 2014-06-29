@@ -3,6 +3,13 @@ require 'personality'
 class BusinessesController < ApplicationController
   include BusinessesHelper
 
+  # Business search constants:
+  BUSINESS_SEARCH_BY = 'name'
+  BUSINESS_SEARCH_ORDER_BY = BUSINESS_SEARCH_BY
+  BUSINESS_SEARCH_ORDER_TYPE = 'ASC'
+  BUSINESS_SEARCH_ORDER_STR = BUSINESS_SEARCH_ORDER_BY + ' ' +
+                              BUSINESS_SEARCH_ORDER_TYPE
+
   def index
   end
 
@@ -13,7 +20,9 @@ class BusinessesController < ApplicationController
 
     # Perform a lookup using the business name.  This will also have partial
     # matching.
-    businesses = Business.where("name LIKE ?", "%#{business_name}%")
+    businesses = Business.where("lower(#{BUSINESS_SEARCH_BY}) LIKE ?",
+                                "%#{business_name.downcase}%").order(
+                                    BUSINESS_SEARCH_ORDER_STR)
 
     # TODO: For now, get the first business until a search results page is
     # developed.
