@@ -229,6 +229,32 @@ module BusinessesHelper
     end
   end
 
+  def get_all_user_personality_counts
+    puts 'Printing all users personality counts:'
+
+    customer_personality_hash = {}
+
+    # First load the CSV file
+    load_csv_to_hash(customer_personality_hash,
+                     USER_DATA_FILEPATH)
+
+    personality_count_hash = {}
+
+    # Now iterate through each customer and store the personality types.
+    customer_personality_hash.each_value do |personality|
+      if personality_count_hash.has_key? personality
+        personality_count_hash[personality] += 1
+      else
+        personality_count_hash[personality] = 1
+      end
+    end
+
+    # Print the count for each personality type now.
+    personality_count_hash.each do |personality, count|
+      puts "Type: #{personality}, Count: #{count}"
+    end
+  end
+
   def load_csv_to_hash(hash, filepath)
     puts "Loading CSV (#{filepath}) to hash"
 
@@ -240,7 +266,7 @@ module BusinessesHelper
         key = row[USER_ID_CSV_NAME]
         value = row[USER_PERSONALITY_CSV_NAME]
 
-        puts "Key: #{key}, Value: #{value}"
+        #puts "Key: #{key}, Value: #{value}"
 
         # Print feedback every N records processed
         if print_idx % FEEDBACK_PRINT_THRESH == 0
