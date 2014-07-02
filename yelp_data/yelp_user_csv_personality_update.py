@@ -23,7 +23,7 @@ for line in user_lines:
 	if "10" in val:
 		words[len(words)-1] = PERSONALITY_MAP[9]+'\n'
 	else:
-		words[len(words)-1] = PERSONALITY_MAP[int(val)]+'\n'
+		words[len(words)-1] = PERSONALITY_MAP[int(val)-1]+'\n'
 	for i in range(len(words)):
 		if i == len(words)-1:
 			outfile.write(words[i])
