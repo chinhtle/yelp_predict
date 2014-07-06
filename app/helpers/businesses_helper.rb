@@ -21,6 +21,7 @@ module BusinessesHelper
   # Hash Key Constants
   HASH_KEY_BUSINESS_ID = 'business_id'
   HASH_KEY_USER_ID = 'user_id'
+  HASH_KEY_REVIEW_TEXT = 'text'
 
   # User Data Set Constants
   USER_DATA_FILENAME = 'user_mapped_updated2.csv'
@@ -55,6 +56,10 @@ module BusinessesHelper
   # Some table configurations
   RESULTS_TABLE_CONFIGS = '' # No particular configs for now..
   RESULTS_TABLE_CLASSES = 'table table-hover'
+
+  # Constants for the remapping helper function
+  REMAP_DATA_FILENAME = 'user_remapped.csv'
+  REMAP_FILEPATH = "#{DATA_PATH}/#{REMAP_DATA_FILENAME}"
 
   def load_bus_data
     puts 'Loading business data..'
@@ -285,6 +290,51 @@ module BusinessesHelper
     end
   end
 
+  def remap_personalities_from_csv
+    puts "Remapping personalities from CSV.."
+
+    user_review_hash = {}
+    get_user_review_texts_hash(user_review_hash)
+
+    # Check if the file exists
+    if File.file?(USER_DATA_FILEPATH)
+      # Open output file
+      CSV.open(REMAP_FILEPATH, 'w', force_quotes:true) do |csv_out|
+        CSV.foreach(USER_DATA_FILEPATH, headers:true) do |row|
+          # Retrieve the associated personality
+          mapped_type = Personality::PERSONALITY_INTRO_EXTRA_MAP[
+                          row[USER_PERSONALITY_CSV_NAME]]
+
+          #puts "Type: #{row[USER_PERSONALITY_CSV_NAME]}, Mapped: #{mapped_type}"
+
+          # Update the mapped personality
+          row[USER_PERSONALITY_CSV_NAME] = mapped_type
+
+          # Add the user's review texts
+          row[HASH_KEY_REVIEW_TEXT] = "#{user_review_hash[row[HASH_KEY_USER_ID]].gsub!(/[,'\r\n"]/, '')}"
+
+          # Now update the others
+          # Personality::FEATURES_TO_NOM_MAP.each do |feature_key, mapping_hash|
+          #   # At this feature, identify the nominal based on threshold
+          #   #puts "Value: #{row[feature_key]}, thresh: #{mapping_hash[:thresh]}"
+          #   if row[feature_key] > mapping_hash[:thresh]
+          #     row[feature_key] = mapping_hash[:nom_high]
+          #   else
+          #     row[feature_key] = mapping_hash[:nom_low]
+          #   end
+          # end
+
+          # output the record
+          if !row[HASH_KEY_REVIEW_TEXT].blank?
+            csv_out << row.fields
+          end
+        end
+      end
+    else
+      puts "User CSV file does not exist!"
+    end
+  end
+
   def load_bus_reviews_to_hash(hash, filepath, primary_key, secondary_key)
     puts "Loading Business Reviews JSON to hash. Primary: #{primary_key}, " \
          "Secondary: #{secondary_key}"
@@ -324,6 +374,47 @@ module BusinessesHelper
     else
       puts 'Could not open file'
     end
+  end
+
+  def load_user_reviews_to_hash(hash, filepath, primary_key, secondary_key)
+    puts "Loading User Reviews JSON to hash. Primary: #{primary_key}, " \
+         "Secondary: #{secondary_key}"
+
+    # Check if the file exists
+    if File.file?(filepath)
+      print_idx = 0
+
+      File.open(filepath, 'r').each do |line|
+        # Parse JSON
+        data_hash = JSON.parse(line)
+
+        key = data_hash[primary_key]
+        value = data_hash[secondary_key]
+
+        # puts "Line: #{line}"
+        # puts "Key: #{key}, Value: #{value}"
+
+        # Print feedback every N records processed
+        if print_idx % FEEDBACK_PRINT_THRESH == 0
+          print '.'
+        end
+
+        # Append the text
+        if hash.has_key?(key)
+          hash[key] += value
+        else
+          hash[key] = ''
+        end
+
+        print_idx += 1
+      end
+
+      puts '' # Newline after the feedback prints.
+    else
+      puts 'Could not open file'
+    end
+
+    delete_extracted_data
   end
 
   # Requires a hash of users and their personalities.
@@ -472,6 +563,19 @@ module BusinessesHelper
     end
 
     return res.html_safe
+  end
+
+  def get_user_review_texts_hash(user_review_hash)
+    puts 'Getting user review texts hash...'
+    if extract_data_sets
+      puts 'Extract successful. Proceeding to load from extracted JSON file'
+
+      # Load the business reviews JSON
+      load_user_reviews_to_hash(user_review_hash,
+                                EXTRACTED_FILEPATH,
+                                HASH_KEY_USER_ID,
+                                HASH_KEY_REVIEW_TEXT)
+    end
   end
 
   def render_google_visualr_chart(business_hash)
