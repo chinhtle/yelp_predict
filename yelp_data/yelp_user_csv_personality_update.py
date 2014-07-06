@@ -19,11 +19,12 @@ for line in user_lines:
 		continue
 	print line
 	words = line.split(',')
-	val = words[len(words)-1].rstrip('\n')
+#	val = words[len(words)-1].rstrip('\n')
+        val = words[23]
 	if "10" in val:
-		words[len(words)-1] = PERSONALITY_MAP[9]+'\n'
+		words[23] = PERSONALITY_MAP[9]
 	else:
-		words[len(words)-1] = PERSONALITY_MAP[int(val)-1]+'\n'
+		words[23] = PERSONALITY_MAP[int(val)-1]
 	for i in range(len(words)):
 		if i == len(words)-1:
 			outfile.write(words[i])
