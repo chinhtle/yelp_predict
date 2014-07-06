@@ -61,6 +61,9 @@ module BusinessesHelper
   REMAP_DATA_FILENAME = 'user_remapped.csv'
   REMAP_FILEPATH = "#{DATA_PATH}/#{REMAP_DATA_FILENAME}"
 
+  # Flag for enabling adding review text to the remapping function.
+  ADD_REVIEW_TEXTS = false
+
   def load_bus_data
     puts 'Loading business data..'
 
@@ -291,10 +294,12 @@ module BusinessesHelper
   end
 
   def remap_personalities_from_csv
-    puts "Remapping personalities from CSV.."
+    puts 'Remapping personalities from CSV..'
 
-    user_review_hash = {}
-    get_user_review_texts_hash(user_review_hash)
+    if ADD_REVIEW_TEXTS
+      user_review_hash = {}
+      get_user_review_texts_hash(user_review_hash)
+    end
 
     # Check if the file exists
     if File.file?(USER_DATA_FILEPATH)
@@ -310,23 +315,16 @@ module BusinessesHelper
           # Update the mapped personality
           row[USER_PERSONALITY_CSV_NAME] = mapped_type
 
-          # Add the user's review texts
-          row[HASH_KEY_REVIEW_TEXT] = "#{user_review_hash[row[HASH_KEY_USER_ID]].gsub!(/[,'\r\n"]/, '')}"
-
-          # Now update the others
-          # Personality::FEATURES_TO_NOM_MAP.each do |feature_key, mapping_hash|
-          #   # At this feature, identify the nominal based on threshold
-          #   #puts "Value: #{row[feature_key]}, thresh: #{mapping_hash[:thresh]}"
-          #   if row[feature_key] > mapping_hash[:thresh]
-          #     row[feature_key] = mapping_hash[:nom_high]
-          #   else
-          #     row[feature_key] = mapping_hash[:nom_low]
-          #   end
-          # end
+          if ADD_REVIEW_TEXTS
+            # Add the user's review texts
+            row[HASH_KEY_REVIEW_TEXT] =
+              "#{user_review_hash[row[HASH_KEY_USER_ID]].gsub!(/[,'\r\n"]/,'')}"
+          end
 
           # output the record
-          if !row[HASH_KEY_REVIEW_TEXT].blank?
-            csv_out << row.fields
+          if (ADD_REVIEW_TEXTS && !row[HASH_KEY_REVIEW_TEXT].blank?) ||
+             !ADD_REVIEW_TEXTS
+              csv_out << row.fields
           end
         end
       end
