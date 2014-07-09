@@ -58,7 +58,7 @@ module BusinessesHelper
   RESULTS_TABLE_CLASSES = 'table table-hover'
 
   # Constants for the remapping helper function
-  REMAP_DATA_FILENAME = 'user_remapped.csv'
+  REMAP_DATA_FILENAME = 'user_remapped_intro_extro.csv'
   REMAP_FILEPATH = "#{DATA_PATH}/#{REMAP_DATA_FILENAME}"
 
   # Flag for enabling adding review text to the remapping function.
@@ -90,7 +90,7 @@ module BusinessesHelper
         # read in from the users data set file to obtain their associated
         # personalities.
         load_csv_to_hash(customer_personality_hash,
-                         USER_DATA_FILEPATH)
+                         REMAP_FILEPATH)
 
         # Associate the business and customer personality hashes.  Store
         # the personality into the business customer hash
@@ -155,16 +155,8 @@ module BusinessesHelper
         state:             business_info_hash[BUSINESS_INFO_KEYS[:state_key]],
         dominant_type:     summary_hash[P_HIGHEST_TYPE_KEY],
         dominant_value:    summary_hash[P_HIGHEST_VALUE_KEY],
-        num_prosocial:     summary_hash[Personality::PERSONALITY_KEYS[Personality::PROSOCIAL]],
-        num_risktaker:     summary_hash[Personality::PERSONALITY_KEYS[Personality::RISK_TAKER]],
-        num_anxious:       summary_hash[Personality::PERSONALITY_KEYS[Personality::ANXIOUS]],
-        num_passive:       summary_hash[Personality::PERSONALITY_KEYS[Personality::PASSIVE]],
-        num_perfectionist: summary_hash[Personality::PERSONALITY_KEYS[Personality::PERFECTIONIST]],
-        num_critical:      summary_hash[Personality::PERSONALITY_KEYS[Personality::CRITICAL]],
-        num_conscientious: summary_hash[Personality::PERSONALITY_KEYS[Personality::CONSCIENTIOUS]],
-        num_openminded:    summary_hash[Personality::PERSONALITY_KEYS[Personality::OPEN_MINDED]],
-        num_intuitive:     summary_hash[Personality::PERSONALITY_KEYS[Personality::INTUITIVE]],
-        num_liberal:       summary_hash[Personality::PERSONALITY_KEYS[Personality::LIBERAL]])
+        num_introverted:   summary_hash[Personality::INTRO_EXTRO_KEYS[Personality::INTROVERTED]],
+        num_extroverted:   summary_hash[Personality::INTRO_EXTRO_KEYS[Personality::EXTROVERTED]])
     end
   end
 
@@ -305,12 +297,18 @@ module BusinessesHelper
     if File.file?(USER_DATA_FILEPATH)
       # Open output file
       CSV.open(REMAP_FILEPATH, 'w', force_quotes:true) do |csv_out|
+        # Get headers
+        headers = CSV.read(USER_DATA_FILEPATH).first
+
+        # Print headers out first.
+        csv_out << headers
+
         CSV.foreach(USER_DATA_FILEPATH, headers:true) do |row|
           # Retrieve the associated personality
           mapped_type = Personality::PERSONALITY_INTRO_EXTRA_MAP[
                           row[USER_PERSONALITY_CSV_NAME]]
 
-          #puts "Type: #{row[USER_PERSONALITY_CSV_NAME]}, Mapped: #{mapped_type}"
+          puts "Type: #{row[USER_PERSONALITY_CSV_NAME]}, Mapped: #{mapped_type}"
 
           # Update the mapped personality
           row[USER_PERSONALITY_CSV_NAME] = mapped_type
@@ -499,37 +497,13 @@ module BusinessesHelper
     table.new_column('string', 'Personality')
     table.new_column('number', 'Matches')
 
-    table.add_rows(11)
-    table.set_cell(Personality::PROSOCIAL, 0,
-                   Personality::PERSONALITY_KEYS[Personality::PROSOCIAL])
-    table.set_cell(Personality::PROSOCIAL, 1, business.num_prosocial)
-    table.set_cell(Personality::RISK_TAKER, 0,
-                   Personality::PERSONALITY_KEYS[Personality::RISK_TAKER])
-    table.set_cell(Personality::RISK_TAKER, 1, business.num_risktaker)
-    table.set_cell(Personality::ANXIOUS, 0,
-                   Personality::PERSONALITY_KEYS[Personality::ANXIOUS])
-    table.set_cell(Personality::ANXIOUS, 1,  business.num_anxious)
-    table.set_cell(Personality::PASSIVE, 0,
-                   Personality::PERSONALITY_KEYS[Personality::PASSIVE])
-    table.set_cell(Personality::PASSIVE, 1,  business.num_passive)
-    table.set_cell(Personality::PERFECTIONIST, 0,
-                   Personality::PERSONALITY_KEYS[Personality::PERFECTIONIST])
-    table.set_cell(Personality::PERFECTIONIST, 1, business.num_perfectionist)
-    table.set_cell(Personality::CRITICAL, 0,
-                   Personality::PERSONALITY_KEYS[Personality::CRITICAL])
-    table.set_cell(Personality::CRITICAL, 1, business.num_critical)
-    table.set_cell(Personality::CONSCIENTIOUS, 0,
-                   Personality::PERSONALITY_KEYS[Personality::CONSCIENTIOUS])
-    table.set_cell(Personality::CONSCIENTIOUS, 1,  business.num_conscientious)
-    table.set_cell(Personality::OPEN_MINDED, 0,
-                   Personality::PERSONALITY_KEYS[Personality::OPEN_MINDED])
-    table.set_cell(Personality::OPEN_MINDED, 1,  business.num_openminded)
-    table.set_cell(Personality::INTUITIVE, 0,
-                   Personality::PERSONALITY_KEYS[Personality::INTUITIVE])
-    table.set_cell(Personality::INTUITIVE, 1,  business.num_intuitive)
-    table.set_cell(Personality::LIBERAL, 0,
-                   Personality::PERSONALITY_KEYS[Personality::LIBERAL])
-    table.set_cell(Personality::LIBERAL, 1,  business.num_liberal)
+    table.add_rows(3)
+    table.set_cell(Personality::INTROVERTED, 0,
+                   Personality::INTRO_EXTRO_KEYS[Personality::INTROVERTED])
+    table.set_cell(Personality::INTROVERTED, 1, business.num_introverted)
+    table.set_cell(Personality::EXTROVERTED, 0,
+                   Personality::INTRO_EXTRO_KEYS[Personality::EXTROVERTED])
+    table.set_cell(Personality::EXTROVERTED, 1, business.num_extroverted)
   end
 
   def print_businesses_search_results(results, business_name)
@@ -608,13 +582,13 @@ module BusinessesHelper
     @all_personalities = 0
 
     # Get total personality count, which will be used for percentage.
-    Personality::PERSONALITY_KEYS.each_key do |key|
-      @all_personalities += business_hash[Personality::PERSONALITY_NUM_KEYS[key]]
+    Personality::INTRO_EXTRO_KEYS.each_key do |key|
+      @all_personalities += business_hash[Personality::INTRO_EXTRO_NUM_KEYS[key]]
     end
 
     # Create the data array from the different types of personalities.
-    Personality::PERSONALITY_KEYS.each do |key, p_type|
-      curr_type_val = business_hash[Personality::PERSONALITY_NUM_KEYS[key]]
+    Personality::INTRO_EXTRO_KEYS.each do |key, p_type|
+      curr_type_val = business_hash[Personality::INTRO_EXTRO_NUM_KEYS[key]]
 
       # Only add it to the data array if it has a non-zero value
       if curr_type_val > 0

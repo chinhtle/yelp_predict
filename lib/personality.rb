@@ -40,6 +40,9 @@ class Personality
     LIBERAL       => 'More liberal than conservative.'
   }
 
+  INTROVERTED = 0
+  EXTROVERTED = 1
+
   # Tightly coupled with personality map defined in
   # yelp_user_csv_personality_update.py
   PERSONALITY_KEYS = {PROSOCIAL     => 'Prosocial',
@@ -53,28 +56,25 @@ class Personality
                       INTUITIVE     => 'Intuitive',
                       LIBERAL       => 'Liberal'}
 
-  PERSONALITY_NUM_KEYS = {PROSOCIAL     => 'num_prosocial',
-                          RISK_TAKER    => 'num_risktaker',
-                          ANXIOUS       => 'num_anxious',
-                          PASSIVE       => 'num_passive',
-                          PERFECTIONIST => 'num_perfectionist',
-                          CRITICAL      => 'num_critical',
-                          CONSCIENTIOUS => 'num_conscientious',
-                          OPEN_MINDED   => 'num_openminded',
-                          INTUITIVE     => 'num_intuitive',
-                          LIBERAL       => 'num_liberal'}
+  INTRO_EXTRO_KEYS = {
+    INTROVERTED => 'Introverted',
+    EXTROVERTED => 'Extroverted'
+  }
+
+  INTRO_EXTRO_NUM_KEYS = {INTROVERTED   => 'num_introverted',
+                          EXTROVERTED   => 'num_extroverted'}
 
   PERSONALITY_INTRO_EXTRA_MAP = {
-    PERSONALITY_KEYS[PROSOCIAL]     => 'Extraverted', #Introverted
-    PERSONALITY_KEYS[RISK_TAKER]    => 'Extraverted', #Introverted
-    PERSONALITY_KEYS[ANXIOUS]       => 'Extraverted',
-    PERSONALITY_KEYS[PASSIVE]       => 'Introverted',
-    PERSONALITY_KEYS[PERFECTIONIST] => 'Introverted',
-    PERSONALITY_KEYS[CRITICAL]      => 'Introverted',
-    PERSONALITY_KEYS[CONSCIENTIOUS] => 'Introverted',
-    PERSONALITY_KEYS[OPEN_MINDED]   => 'Extraverted',
-    PERSONALITY_KEYS[INTUITIVE]     => 'Extraverted',
-    PERSONALITY_KEYS[LIBERAL]       => 'Extraverted'
+    PERSONALITY_KEYS[PROSOCIAL]     => INTRO_EXTRO_KEYS[EXTROVERTED],
+    PERSONALITY_KEYS[RISK_TAKER]    => INTRO_EXTRO_KEYS[EXTROVERTED],
+    PERSONALITY_KEYS[ANXIOUS]       => INTRO_EXTRO_KEYS[EXTROVERTED],
+    PERSONALITY_KEYS[PASSIVE]       => INTRO_EXTRO_KEYS[INTROVERTED],
+    PERSONALITY_KEYS[PERFECTIONIST] => INTRO_EXTRO_KEYS[INTROVERTED],
+    PERSONALITY_KEYS[CRITICAL]      => INTRO_EXTRO_KEYS[INTROVERTED],
+    PERSONALITY_KEYS[CONSCIENTIOUS] => INTRO_EXTRO_KEYS[INTROVERTED],
+    PERSONALITY_KEYS[OPEN_MINDED]   => INTRO_EXTRO_KEYS[EXTROVERTED],
+    PERSONALITY_KEYS[INTUITIVE]     => INTRO_EXTRO_KEYS[EXTROVERTED],
+    PERSONALITY_KEYS[LIBERAL]       => INTRO_EXTRO_KEYS[EXTROVERTED]
   }
 
 end

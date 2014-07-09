@@ -11,32 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140628180940) do
+ActiveRecord::Schema.define(version: 20140709064405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "businesses", force: true do |t|
-    t.string   "business_id"
-    t.string   "name"
-    t.float    "stars"
-    t.integer  "review_count"
-    t.string   "city"
-    t.string   "state"
-    t.integer  "num_prosocial"
-    t.integer  "num_risktaker"
-    t.integer  "num_anxious"
-    t.integer  "num_passive"
-    t.integer  "num_perfectionist"
-    t.integer  "num_critical"
-    t.integer  "num_conscientious"
-    t.integer  "num_openminded"
-    t.integer  "num_intuitive"
-    t.integer  "num_liberal"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "dominant_type"
-    t.integer  "dominant_value"
+    t.string  "business_id"
+    t.string  "name"
+    t.float   "stars"
+    t.integer "review_count"
+    t.string  "city"
+    t.string  "state"
+    t.string  "dominant_type"
+    t.integer "dominant_value"
+    t.integer "num_introverted"
+    t.integer "num_extroverted"
   end
 
 end
