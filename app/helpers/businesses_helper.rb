@@ -636,9 +636,14 @@ module BusinessesHelper
 
   def show_personality_description personality_type
     res = '<h2>'
-    res << '<b><i>'
-    res << "#{Personality::INTRO_EXTRO_TO_BUSINESS_TERM[personality_type]}: "
-    res << '</i></b>'
+    res << '<b>'
+    res << "#{Personality::INTRO_EXTRO_TO_BUSINESS_TERM[personality_type]} "
+    res << '</b>'
+    res << '<i>'
+    res << '<br>'
+    res << Personality::INTRO_EXTRO_PRONOUNCE[personality_type]
+    res << '</i>'
+    res << '<br><br>'
     res << Personality::INTRO_EXTRO_DESCRIPTION[personality_type]
     res << '</h2>'
     return res.html_safe
