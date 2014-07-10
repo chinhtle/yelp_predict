@@ -77,4 +77,14 @@ class Personality
     PERSONALITY_KEYS[LIBERAL]       => INTRO_EXTRO_KEYS[EXTROVERTED]
   }
 
+  INTRO_EXTRO_DESCRIPTION = {
+    INTRO_EXTRO_KEYS[INTROVERTED]   => 'Temp introversion description..',
+    INTRO_EXTRO_KEYS[EXTROVERTED]   => 'Temp extroversion description..'
+  }
+
+  INTRO_EXTRO_TO_BUSINESS_TERM = {
+    INTRO_EXTRO_KEYS[INTROVERTED]   => 'Introversion',
+    INTRO_EXTRO_KEYS[EXTROVERTED]   => 'Extroversion'
+  }
+
 end

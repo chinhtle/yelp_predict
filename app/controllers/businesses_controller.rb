@@ -42,6 +42,13 @@ class BusinessesController < ApplicationController
       @found = true
       @pie_chart_google_visualr = false
 
+      # Get business information
+      @business_name = business.name
+      @business_city = business.city
+      @business_rating = business.stars
+      @business_state = business.state
+      @business_dominant = business.dominant_type
+
       if PIE_CHART_TYPE_GOOGLE_VISUALR
         @@pie_chart_google_visualr = true
         render_google_visualr_chart business
