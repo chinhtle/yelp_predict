@@ -42,7 +42,7 @@ module BusinessesHelper
   # the business model.
   BUSINESS_INFO_KEYS = {name_key: 'name', stars_key: 'stars',
                         review_count_key: 'review_count', city_key: 'city',
-                        state_key: 'state'}
+                        state_key: 'state', address_key: 'full_address'}
   BUSINESS_INFO_PATH = "#{BUSINESS_DATA_PATH}/business_info"
   BUSINESS_INFO_FILENAME = 'yelp_academic_dataset_business.json'
   BUSINESS_INFO_FILEPATH = "#{BUSINESS_INFO_PATH}/#{BUSINESS_INFO_FILENAME}"
@@ -153,6 +153,7 @@ module BusinessesHelper
         review_count:      business_info_hash[BUSINESS_INFO_KEYS[:review_count_key]],
         city:              business_info_hash[BUSINESS_INFO_KEYS[:city_key]],
         state:             business_info_hash[BUSINESS_INFO_KEYS[:state_key]],
+        full_address:      business_info_hash[BUSINESS_INFO_KEYS[:address_key]],
         dominant_type:     summary_hash[P_HIGHEST_TYPE_KEY],
         dominant_value:    summary_hash[P_HIGHEST_VALUE_KEY],
         num_introverted:   summary_hash[Personality::INTRO_EXTRO_KEYS[Personality::INTROVERTED]],
@@ -520,7 +521,9 @@ module BusinessesHelper
         res << "<a href=\"#{businesses_path}/#{business.id}\">"
 
         # Add the row content:
-        res << "<b>#{business.name}</b> - #{business.city}, #{business.state}"
+        res << "<b>#{business.name}</b>"
+        res << '<br>'
+        res << "<i>#{business.full_address}</i>"
 
         # Close off the link
         res << '</a>'
@@ -636,6 +639,18 @@ module BusinessesHelper
     res << '</i></b>'
     res << Personality::INTRO_EXTRO_DESCRIPTION[personality_type]
     res << '</h2>'
+    return res.html_safe
+  end
+
+  def show_address address
+    addr_array = address.split("\n")
+
+    res = '<h2>'
+    res << addr_array[0]
+    res << '<br>'
+    res << addr_array[1]
+    res << '</h2>'
+
     return res.html_safe
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140709064405) do
+ActiveRecord::Schema.define(version: 20140710033135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20140709064405) do
     t.integer "dominant_value"
     t.integer "num_introverted"
     t.integer "num_extroverted"
+    t.string  "full_address"
   end
 
 end

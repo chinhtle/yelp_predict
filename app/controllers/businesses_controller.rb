@@ -44,9 +44,8 @@ class BusinessesController < ApplicationController
 
       # Get business information
       @business_name = business.name
-      @business_city = business.city
+      @business_address = "#{business.full_address}"
       @business_rating = business.stars
-      @business_state = business.state
       @business_dominant = business.dominant_type
 
       if PIE_CHART_TYPE_GOOGLE_VISUALR
