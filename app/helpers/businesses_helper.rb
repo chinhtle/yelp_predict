@@ -520,10 +520,12 @@ module BusinessesHelper
         # Make the row clickable
         res << "<a href=\"#{businesses_path}/#{business.id}\">"
 
+        address = business.full_address.split("\n")
+
         # Add the row content:
         res << "<b>#{business.name}</b>"
         res << '<br>'
-        res << "<i>#{business.full_address}</i>"
+        res << "<i>#{address[0]}<br>#{address[1]}</i>"
 
         # Close off the link
         res << '</a>'
