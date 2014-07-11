@@ -753,6 +753,9 @@ module BusinessesHelper
   end
 
   def retrieve_business_info_from_page page, business_hash, business_id
+    # Initialize the hash for the business_id
+    business_hash[business_id] = {}
+    
     # Business name
     business_hash[business_id][BUSINESS_INFO_KEYS[:name_key]] =
       page.css('h1.biz-page-title.embossed-text-white').text
