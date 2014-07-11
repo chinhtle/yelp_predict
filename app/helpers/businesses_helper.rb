@@ -3,6 +3,10 @@ require 'zlib'
 require 'json'
 require 'csv'
 require 'personality'
+require 'rubygems'
+require 'nokogiri'
+require 'open-uri'
+require 'common'
 
 module BusinessesHelper
   CURR_DIR = File.dirname(__FILE__)
@@ -63,6 +67,9 @@ module BusinessesHelper
 
   # Flag for enabling adding review text to the remapping function.
   ADD_REVIEW_TEXTS = false
+
+  # Time to wait between each request to avoid being identified as crawler
+  GET_REQ_TIME = 0.25 # quarter of a second
 
   def load_bus_data
     puts 'Loading business data..'
@@ -659,5 +666,113 @@ module BusinessesHelper
     res << '</h2>'
 
     return res.html_safe
+  end
+
+  def is_business_url query_str
+    return query_str.include? '/biz/'
+  end
+
+  def retrieve_business_info_from_url business_url, update_if_found
+    page = Nokogiri::HTML(open(business_url, Common::CRAWL_USER_AGENT))
+
+    # First obtain the business-id and check if we already have it in our
+    # database, if so, we can proceed to redirect the user to the results page.
+    # But only redirect if update_if_found flag is false, otherwise, we will
+    # still need to parse the page to get all data to update record in DB, if it
+    # exists.
+    # if update_if_found
+    retrieved_bus_id =
+      page.css('div.mapbox-text a')[0]['href'].split("biz_id=")[1]
+
+    if !retrieved_bus_id.blank?
+      # Perform a lookup using the retrieved business-id
+      business = Business.find_by(business_id: retrieved_bus_id)
+      business_hash = {}
+      user_urls = {}
+      user_personality_hash = {}
+
+      if business.nil?
+        # Since business is not found in the DB, get data from retrieved source.
+        # Only interested in all the customer urls.
+        # Retrieve from current page first
+        retrieve_users_from_page page, user_urls
+
+        # Get all users for remaining pages
+        pages = page.css('a.page-option.available-number')
+
+        # TODO: Uncomment when in production. Avoid calls for now.
+        # for i in 0..pages.length-1
+        #   # Sleep with given time to avoid being marked as a crawler.
+        #   sleep(GET_REQ_TIME)
+        #
+        #   # Reload the page using the parsed URL
+        #   new_url = pages[i]['href']
+        #   page = Nokogiri::HTML(open(new_url, Common::CRAWL_USER_AGENT))
+        #
+        #   # Get all user_ids on the new page.
+        #   retrieve_users_from_page page, user_urls
+        # end
+
+        # TODO: Perform a personality prediction using the
+        #       classification model, passing in the URL of this user.
+        user_urls.each_key do |user_url|
+          # Sleep with given time to avoid being marked as a crawler.
+          sleep(GET_REQ_TIME)
+
+          # Grab the user's information and predict at given URL.  Store in
+          # hash.
+          # TODO: Printing just for debug.  Remove later.
+          puts user_url
+        end
+
+        # TODO: For all the obtained user info, get summary and store for
+        #       the business.
+      else
+        if update_if_found
+          # Since flag to update is true, update record in DB with retrieved
+          # data.
+        end
+      end
+
+      # Obtain all business info
+      retrieve_business_info_from_page page, business_hash,
+                                       retrieved_bus_id
+
+      # TODO: Get summary using the user_personality_hash and business_hash
+      # summarize_and_add_business_to_db
+    end
+  end
+
+  def retrieve_users_from_page page, user_urls_hash
+    users = page.css('a.user-display-name')
+
+    # Store each user_id in the hash, for current page.
+    for i in 0..users.length-1
+      user_urls_hash["http://www.yelp.com#{users[i]['href']}"] = 0
+    end
+  end
+
+  def retrieve_business_info_from_page page, business_hash, business_id
+    # Business name
+    business_hash[business_id][BUSINESS_INFO_KEYS[:name_key]] =
+      page.css('h1.biz-page-title.embossed-text-white').text
+
+    business_hash[business_id][BUSINESS_INFO_KEYS[:stars_key]] =
+      page.css("div.biz-main-info meta[itemprop='ratingValue']")[0]['content']
+
+    business_hash[business_id][BUSINESS_INFO_KEYS[:review_count_key]] =
+      page.css("div.biz-main-info span[itemprop='reviewCount']").text
+
+    address = page.css("div.media-story address").text
+    # Address needs to be split into city, state, and formatted full address.
+    # Format: 80 N Market St, San Jose, CA 95113
+    address = address.split(',')
+    city = address[1]
+    state = address[2].split(' ')[1]
+    full_address = "#{address[0]}\n#{address[1]},#{address[2]}"
+
+    business_hash[business_id][BUSINESS_INFO_KEYS[:city_key]] = city
+    business_hash[business_id][BUSINESS_INFO_KEYS[:state_key]] = state
+    business_hash[business_id][BUSINESS_INFO_KEYS[:address_key]] = full_address
   end
 end

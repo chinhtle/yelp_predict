@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
+require 'common'
 
 class UsersController < ApplicationController
   def result
@@ -23,9 +24,8 @@ class UsersController < ApplicationController
     #Get page
 
     #Ruby/#{RUBY_VERSION}
-    page = Nokogiri::HTML(open(url, "User-Agent" => "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"))
-    puts page.class   # => Nokogiri::HTML::Document
-    
+    page = Nokogiri::HTML(open(url, Common::CRAWL_USER_AGENT))
+
     #user_stats block
     stats = page.css('ul#user_stats')
     length = stats.css('li')
