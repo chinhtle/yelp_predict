@@ -10,8 +10,9 @@ Rails.application.routes.draw do
   end
 
   match '/user',              to: 'users#index',        via: 'get'
-  match '/user/result',       to: 'users#result',       via: 'post'
-  match '/business/results',  to: 'businesses#results', via: 'post'
+  match '/user/result',       to: 'users#result',       via: 'get'
+  match '/business/results',  to: 'businesses#results', via: 'get'
+  match '/predict/delegate',  to: 'predict#delegate',   via: 'post'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

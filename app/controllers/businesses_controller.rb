@@ -14,12 +14,9 @@ class BusinessesController < ApplicationController
   # Pie Chart render type
   PIE_CHART_TYPE_GOOGLE_VISUALR = false
 
-  def index
-  end
-
   def results
     # Interpret the business name from post.
-    @business_name = params[:business_params][:name]
+    @business_name = params[:predict_params][:query_str]
 
     # Perform a lookup using the business name.  This will also have partial
     # matching.

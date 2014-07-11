@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       end
     end
     
-    url = params[:url][:url] #Yelp url input
+    url = params[:predict_params][:query_str] #Yelp url input
     #Check if http:// is provided
     if !url.match(/^http/)
       url = 'http://' + url

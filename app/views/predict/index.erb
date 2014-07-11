@@ -1,7 +1,19 @@
 <div class="center hero-unit">
-    <h1>Yelp Personality Predictor</h1>
-    <h2>What would you like to predict?</h2>
+  <h1>Yelp Personality Predictor</h1>
+  <h2>What would you like to predict?</h2>
 
-    <%= button_to "User", user_path, class: "btn btn-large btn-primary", method: :get %>
-    <%= button_to "Business", businesses_path, class: "btn btn-large btn-primary", method: :get %>
+  <%= form_tag(predict_delegate_path, method: "post") do %>
+    <div class="col-lg-6 col-md-offset-3">
+      <div class="input-group">
+        <input type="text" class="form-control"
+               data-autocomplete="businesses/autocomplete_business_name"
+               id="predict_params" name="predict_params[query_str]"
+               placeholder="Please enter a Yelp user/business URL or a business name">
+      <span class="input-group-btn">
+        <%= button_to "Submit", predict_delegate_path , class: "btn btn-default", method: :post %>
+      </span>
+      </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+    </span>
+  <% end %>
 </div>
