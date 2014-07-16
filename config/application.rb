@@ -21,10 +21,12 @@ module YelpPredict
     # config.i18n.default_locale = :de
 
     # Some compatibility recommendation for bootstrap.
-    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif *.svg *.eot *.woff *.ttf)
 
     # By default Rails 4 will not serve your assets. To enable this
     # functionality you need to go into config/application.rb and add this line:
     config.serve_static_assets = true
+
+    config.assets.compress = true
   end
 end
