@@ -8,11 +8,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 <body>
-  <%= render 'layouts/header' %>
-  <div class="container">
-    <%= yield %>
-    <!--<%= debug(params) if Rails.env.development? %>-->
+  <div class="padded-cont">
+    <%= render 'layouts/header' %>
+      <%= yield %>
+      <!--<%= debug(params) if Rails.env.development? %>-->
+    <%= render 'layouts/footer' %>
   </div>
-  <%= render 'layouts/footer' %>
 </body>
 </html>
