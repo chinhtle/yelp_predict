@@ -22,5 +22,9 @@ module YelpPredict
 
     # Some compatibility recommendation for bootstrap.
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+
+    # By default Rails 4 will not serve your assets. To enable this
+    # functionality you need to go into config/application.rb and add this line:
+    config.serve_static_assets = true
   end
 end
