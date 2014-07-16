@@ -13,11 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.autocomplete
+//= require tipped
+//= require imagesloaded.pkgd.min
 //= require turbolinks
 //= require bootstrap
 //= require autocomplete-rails
 //= require highcharts/highcharts
 //= require highcharts/highcharts-more
 //= require highcharts/highstock
-//= require tipped
 //= require_tree .
