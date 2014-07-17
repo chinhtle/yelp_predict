@@ -28,7 +28,7 @@ module BusinessesHelper
   HASH_KEY_REVIEW_TEXT = 'text'
 
   # User Data Set Constants
-  USER_DATA_FILENAME = 'user_mapped_updated2.csv'
+  USER_DATA_FILENAME = 'user_remapped_intro_extro.csv'
   USER_DATA_FILEPATH = "#{DATA_PATH}/#{USER_DATA_FILENAME}"
   USER_ID_CSV_NAME = HASH_KEY_USER_ID
   USER_PERSONALITY_CSV_NAME = 'personality'
