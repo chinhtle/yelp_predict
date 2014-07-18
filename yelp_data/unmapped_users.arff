@@ -20,7 +20,7 @@
 @attribute hot numeric
 @attribute more numeric
 @attribute cool numeric
-@attribute personality {Extraverted,Introverted}
+@attribute personality {Extroverted,Introverted}
 
 @data
 78,7,1,5,1,0,2.2,0,1,0,0,0,0,0,0,0,0,0,0,0,?
