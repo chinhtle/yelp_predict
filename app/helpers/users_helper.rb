@@ -31,7 +31,7 @@ module UsersHelper
     #function for parsing independent variables
     def get_indep_var(url)
       #Get page
-      page = Nokogiri::HTML(open(url, "User-Agent" => "Ruby/#{RUBY_VERSION}"))    
+      page = Nokogiri::HTML(open(url, Common::CRAWL_USER_AGENT)) 
       #puts page.class   # => Nokogiri::HTML::Document
     
       #user_stats block
@@ -83,7 +83,7 @@ module UsersHelper
       if(page.at_css(more_check))
         more = page.css(more_check).css('a')[0]['href']
         reviews_url = 'http://www.yelp.com' + more
-        more_page = Nokogiri::HTML(open(reviews_url, "User-Agent" => "Ruby/#{RUBY_VERSION}")) 
+        more_page = Nokogiri::HTML(open(reviews_url, Common::CRAWL_USER_AGENT))
         #add to the sum of ratings for the page after more is clicked
         sum += get_sum(more_page)
         #check if next button exists
@@ -93,7 +93,7 @@ module UsersHelper
           next_page = page.css(next_check)[0]['href']
           next_url = 'http://www.yelp.com' + next_page
           sleep(2)
-          page = Nokogiri::HTML(open(next_url, "User-Agent" => "Ruby/#{RUBY_VERSION}")) 
+          page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
           sum += get_sum(page)
         end
       end
