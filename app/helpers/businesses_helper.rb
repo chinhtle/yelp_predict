@@ -821,7 +821,7 @@ module BusinessesHelper
 
   def add_personality_bars_and_rating business
     res =  '<div class="col-xs-12 col-md-6 text-center">'
-    res <<   '<div class="row rating-desc">'
+    res <<   '<div class="row rating-desc" style="margin-top: 10px">'
 
     # Now add each of the personality bars.  The num intro/extro will be
     # passed as the value now, and the percentage will be calculated prior
@@ -899,6 +899,9 @@ module BusinessesHelper
     full_stars = (rating / 1).to_i
     enable_half_star = false
 
+    # Sizes are as follows: fa-lg, fa-2x, fa-3x, fa-4x, fa-5x
+    star_size = 'fa-2x'
+
     if (rating - full_stars) >= 0.5
       enable_half_star = true
     end
@@ -907,11 +910,11 @@ module BusinessesHelper
 
     # Draw the full stars
     for i in 0..full_stars-1
-      res << '<i class="fa fa-star fa-lg"></i>'
+      res << "<i class=\"fa fa-star #{star_size}\"></i>"
     end
 
     if enable_half_star
-      res << '<i class="fa fa-star-half-o fa-lg"></i>'
+      res << "<i class=\"fa fa-star-half-o #{star_size}\"></i>"
     end
 
     # Calculate any empty stars we need to draw.
@@ -923,7 +926,7 @@ module BusinessesHelper
     end
 
     for i in 0..remaining_stars-1
-      res << '<i class="fa fa-star-o fa-lg"></i>'
+      res << "<i class=\"fa fa-star-o #{star_size}\"></i>"
     end
 
     res << '</div>'

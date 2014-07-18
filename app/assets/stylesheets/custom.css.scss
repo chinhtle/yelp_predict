@@ -215,7 +215,16 @@ p {
 }
 
 .glyphicon { margin-right:5px;}
-.rating .glyphicon {font-size: 22px;}
+
+.rating {
+  margin-top: 15px;
+  color: $skyBlue;
+}
+
+.rating .glyphicon {
+  font-size: 22px;
+}
+
 .bus-info .name { margin-top:0px;font-size: 20px; }
 .bus-info .address { margin-top:0px;font-size: 15px; }
 .progress { margin-bottom: 5px;}
