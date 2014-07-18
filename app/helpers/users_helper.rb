@@ -141,6 +141,11 @@ module UsersHelper
       test_set = Rjb::import('weka.classifiers.Evaluation').new(instances)
       #get the prediction
       result = test_set.evaluateModelOnceAndRecordPrediction(file, first)
+	  if (result == 0.0)
+		result = "Extroverted"
+		else
+		result = "Introverted"
+	  end
       return result
     end
 end

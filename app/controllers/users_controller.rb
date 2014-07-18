@@ -14,12 +14,6 @@ include UsersHelper
     end
     #parse independent variables stored in @indep_var
     get_indep_var(url)
-    result = get_prediction()
-    
-    if (result == 0.0)
-      @data = "Extroverted"
-    else
-      @data = "Introverted"
-    end
+    @data = get_prediction()
   end
 end
