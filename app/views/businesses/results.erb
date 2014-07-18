@@ -1,8 +1,10 @@
 <div class="yelp-intro-fitted">
-  <h1>Results for
-    <b><i><font color=#4eabd1>"</font><%=@business_name%><font color=#4eabd1>"</font></i></b>
-  </h1>
-  <%= render 'predict/searchform' %>
+  <div class="container">
+    <h1>Results for
+      <b><i><font color=#4eabd1>"</font><%=@business_name%><font color=#4eabd1>"</font></i></b>
+    </h1>
+    <%= render 'predict/searchform' %>
+  </div>
 </div>
 <div class="container" style="padding-top: 20px">
   <%= print_businesses_search_results(@search_results, @business_name) %>
