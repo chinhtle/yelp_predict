@@ -1,0 +1,27 @@
+@relation _user_unmapped_updated-weka.filters.unsupervised.attribute.Remove-R1
+
+@attribute votes_funny numeric
+@attribute votes_useful numeric
+@attribute votes_cool numeric
+@attribute review_count numeric
+@attribute friends numeric
+@attribute fans numeric
+@attribute average_stars numeric
+@attribute compliments numeric
+@attribute elite numeric
+@attribute profile numeric
+@attribute cute numeric
+@attribute funny numeric
+@attribute plain numeric
+@attribute writer numeric
+@attribute list numeric
+@attribute note numeric
+@attribute photos numeric
+@attribute hot numeric
+@attribute more numeric
+@attribute cool numeric
+@attribute personality {Extroverted,Introverted}
+
+@data
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Introverted
+
