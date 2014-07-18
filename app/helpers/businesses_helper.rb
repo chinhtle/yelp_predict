@@ -515,33 +515,26 @@ module BusinessesHelper
   end
 
   def print_businesses_search_results(results, business_name)
+    puts "Adding businesses search results for #{business_name}"
+
     if results
-      # Iterate through the results and add it to a table.
-      res = "<table class=\"#{RESULTS_TABLE_CLASSES}\" "\
-            "#{RESULTS_TABLE_CONFIGS}>"
+      res = ""
 
+      elem_idx = 0
+      elems_per_row = 2
       results.each do |business|
-        # Add row/cell
-        res << '<tr><td>'
+        if (elem_idx % elems_per_row) == 0
+          res << '<row>'
+        end
 
-        # Make the row clickable
-        res << "<a href=\"#{businesses_path}/#{business.id}\">"
+        res << draw_business_summary_card(business)
 
-        address = business.full_address.split("\n")
+        if (elem_idx % elems_per_row) != 0
+          res << '</row>'
+        end
 
-        # Add the row content:
-        res << "<b>#{business.name}</b>"
-        res << '<br>'
-        res << "<i>#{address[0]}<br>#{address[1]}</i>"
-
-        # Close off the link
-        res << '</a>'
-
-        # Close off this row/cell.
-        res << '</td></tr>'
+        elem_idx = elem_idx + 1
       end
-
-      res << '</table>'
     else
       res = "<h2>No results for <i><b>#{business_name}</b></i></h2>"
     end
@@ -777,5 +770,164 @@ module BusinessesHelper
     business_hash[business_id][BUSINESS_INFO_KEYS[:city_key]] = city
     business_hash[business_id][BUSINESS_INFO_KEYS[:state_key]] = state
     business_hash[business_id][BUSINESS_INFO_KEYS[:address_key]] = full_address
+  end
+
+  def make_business_link business, business_name
+    # Make business link
+    res = "<a href=\"#{businesses_path}/#{business.id}\">"
+    res << business_name
+    res << '</a>'
+
+    return res
+  end
+
+  def draw_business_summary_card business
+    res =   '<div class="col-xs-12 col-md-6">'
+    res <<     '<div class="well well-sm">'
+    res <<       '<div class="row">'
+
+    # Add business info
+    res <<        add_business_info(business)
+
+    # Add the personality bars and rating
+    res <<        add_personality_bars_and_rating(business)
+
+    res <<       '</div>'
+    res <<     '</div>'
+    res <<   '</div>'
+
+    return res
+  end
+
+  def add_business_info business
+    res =  '<div class="col-xs-12 col-md-6 text-center">'
+    res <<   '<h1 class="bus-info">'
+    res <<     '<div class="name">'
+    res <<       make_business_link(business, business.name)
+    res <<     '</div>'
+    res <<   '</h1>'
+    res <<   '<h2 class="bus-info">'
+    res <<     '<div class="address">'
+
+    # Add the address
+    address = business.full_address.split("\n")
+    res <<       "<i>#{address[0]}<br>#{address[1]}</i>"
+    res <<     '</div>'
+    res <<   '</h2>'
+    res << '</div>'
+
+    return res
+  end
+
+  def add_personality_bars_and_rating business
+    res =  '<div class="col-xs-12 col-md-6 text-center">'
+    res <<   '<div class="row rating-desc">'
+
+    # Now add each of the personality bars.  The num intro/extro will be
+    # passed as the value now, and the percentage will be calculated prior
+    # to being passed in.
+    total_personality = business.num_introverted + business.num_extroverted
+
+    # First, we draw the extroverted:
+    res << add_extrovert_personality_bar(total_personality,
+                                         business.num_extroverted)
+
+    # Second, draw the introverted:
+    res << add_introvert_personality_bar(total_personality,
+                                         business.num_introverted)
+
+    res <<   '</div>'
+
+    # Add the rating as stars
+    res <<    draw_rating_stars(business.stars)
+
+    # Add the total number of reviews
+    res <<   '<div>'
+    res <<     '<span class="glyphicon glyphicon-user"></span>'
+    res <<        business.review_count.to_s
+    res <<   '</div>'
+    res << '</div>'
+
+    return res
+  end
+
+  def add_extrovert_personality_bar total, num_extroverted
+    if total != 0
+      percentage = (num_extroverted / total) * 100
+    else
+      # If no personality, just set as 0.
+      percentage = 0
+    end
+
+    return draw_personality_bar(num_extroverted, percentage,
+                                Personality::EXTROVERTED)
+  end
+
+  def add_introvert_personality_bar total, num_introverted
+    if total != 0
+      percentage = (num_introverted / total) * 100
+    else
+      # If no personality, just set as 0.
+      percentage = 0
+    end
+
+    return draw_personality_bar(num_introverted, percentage,
+                                Personality::INTROVERTED)
+  end
+
+  def draw_personality_bar value_now, width, type
+    res =  '<div class="col-xs-3 col-md-3 text-right">'
+    res <<   "<span class=\"glyphicon #{Personality::INTRO_EXTRO_GLYPH_TYPE[type]}\"></span>"
+    res << '</div>'
+    res << '<div class="col-xs-8 col-md-9">'
+    res <<   '<div class="progress">'
+    res <<     "<div class=\"progress-bar #{Personality::INTRO_EXTRO_BAR_TYPE[type]}\"" \
+               "role=\"progressbar\" aria-valuenow=\"#{value_now}\"" \
+               "aria-valuemin=\"0\" aria-valuemax=\"100\"" \
+               " style=\"width: #{width}%\">"
+
+    res <<       "<span class=\"sr-only\">#{width}%</span>"
+    res <<     '</div>'
+    res <<   '</div>'
+    res << '</div>'
+
+    return res
+  end
+
+  def draw_rating_stars rating
+    total_stars = 5
+    full_stars = (rating / 1).to_i
+    enable_half_star = false
+
+    if (rating - full_stars) >= 0.5
+      enable_half_star = true
+    end
+
+    res = '<div class="rating">'
+
+    # Draw the full stars
+    for i in 0..full_stars-1
+      res << '<i class="fa fa-star fa-lg"></i>'
+    end
+
+    if enable_half_star
+      res << '<i class="fa fa-star-half-o fa-lg"></i>'
+    end
+
+    # Calculate any empty stars we need to draw.
+    remaining_stars = total_stars - full_stars
+
+    # And if half star was enabled, subtract that as well as 1 full star.
+    if enable_half_star
+      remaining_stars = remaining_stars - 1
+    end
+
+    for i in 0..remaining_stars-1
+      res << '<i class="fa fa-star-o fa-lg"></i>'
+    end
+
+    res << '</div>'
+
+    return res
   end
 end

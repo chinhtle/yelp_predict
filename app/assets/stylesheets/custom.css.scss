@@ -186,6 +186,14 @@ p {
   background: $primarySchemeColor;
 }
 
+.yelp-intro-fitted {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+  color: #fff;
+  background: $primarySchemeColor;
+}
+
 .simple-logo {
   width: 200px;
   height: 200px;
@@ -204,4 +212,21 @@ p {
   -webkit-transition: all .3s;
   -moz-transition: all .3s;
   transition: all .3s;
+}
+
+.glyphicon { margin-right:5px;}
+.rating .glyphicon {font-size: 22px;}
+.bus-info .name { margin-top:0px;font-size: 20px; }
+.bus-info .address { margin-top:0px;font-size: 15px; }
+.progress { margin-bottom: 5px;}
+.progress-bar { text-align: left; }
+.rating-desc .col-md-3 {padding-right: 0px;}
+.sr-only { margin-left: 5px;overflow: visible;clip: auto; }
+
+a { color: inherit; }
+a:hover
+{
+  color: $skyBlue;
+  text-decoration:none;
+  cursor:pointer;
 }

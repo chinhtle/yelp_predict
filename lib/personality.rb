@@ -105,4 +105,14 @@ class Personality
     INTRO_EXTRO_KEYS[EXTROVERTED]   => 'Extroversion'
   }
 
+  INTRO_EXTRO_BAR_TYPE = {
+    INTROVERTED => 'progress-bar-info',
+    EXTROVERTED => 'progress-bar-danger'
+  }
+
+  INTRO_EXTRO_GLYPH_TYPE = {
+    INTROVERTED => 'glyphicon-cloud',
+    EXTROVERTED => 'glyphicon-fire'
+  }
+
 end
