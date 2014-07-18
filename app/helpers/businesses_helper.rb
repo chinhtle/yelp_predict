@@ -614,7 +614,7 @@ module BusinessesHelper
     end
 
     @chart = LazyHighCharts::HighChart.new('pie') do |f|
-      f.chart({:defaultSeriesType=>"pie" , :margin=> [50, 200, 60, 170]} )
+      f.chart({:defaultSeriesType=>"pie" , :margin=> [0, 0, 50, 0]} )
       series = {
         :type=> 'pie',
         :name=> 'Personality Summary',
