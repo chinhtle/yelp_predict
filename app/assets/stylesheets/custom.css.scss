@@ -232,7 +232,13 @@ p {
 .rating-desc .col-md-3 {padding-right: 0px;}
 .sr-only { margin-left: 5px;overflow: visible;clip: auto; }
 
-a { color: inherit; }
+a {
+  color: inherit;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  transition: all .3s;
+}
+
 a:hover
 {
   color: $skyBlue;
