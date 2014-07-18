@@ -1,19 +1,54 @@
-<div class="center hero-unit">
-  <h1>Yelp Personality Predictor</h1>
-  <h2>What would you like to predict?</h2>
+<script type="text/javascript">
+  $(document).ready(function() {
+    Tipped.create('.function', function() {
+        return {
+          title: $(this).data('title'),
+          content: $(this).data('content')
+        };
+      },
+      {
+        size: 'large',
+        skin: 'light',
+        position: 'bottom',
+        close: true
+      });
+  });
+</script>
+<div class="yelp-intro">
+  <div class="container">
+    <div class="simple-logo">yp</div>
+    <h1>What would you like to predict?</h1>
 
-  <%= form_tag(predict_delegate_path, method: "post") do %>
-    <div class="col-lg-6 col-md-offset-3">
-      <div class="input-group">
-        <input type="text" class="form-control"
-               data-autocomplete="businesses/autocomplete_business_name"
-               id="predict_params" name="predict_params[query_str]"
-               placeholder="Please enter a Yelp user/business URL or a business name">
-      <span class="input-group-btn">
-        <%= button_to "Submit", predict_delegate_path , class: "btn btn-default", method: :post %>
-      </span>
-      </div><!-- /input-group -->
-    </div><!-- /.col-lg-6 -->
-    </span>
-  <% end %>
+    <%= form_tag(predict_delegate_path, method: :post) do %>
+      <div style="max-width: 600px; margin-left: auto; margin-right: auto">
+        <span class='function' data-content='
+        <b><i><font color=#4eabd1>
+        User Personality Prediction:</font></i></b><br>
+        Enter your Yelp URL, i.e.
+        http://www.yelp.com/user_details?userid=UunrWcYzTkIR24EsP8tGrQ<br><br>
+
+        <b><i><font color=#4eabd1>
+        Business Personality Summary:</font></i></b><br>
+        Enter the Yelp URL for a business, i.e.
+        http://www.yelp.com/biz/philz-coffee-san-jose-2<br>
+        Or, a business name if it already exists in our database.'
+        data-title="Usages">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control input-lg"
+                     data-autocomplete="businesses/autocomplete_business_name"
+                     id="predict_params" name="predict_params[query_str]"
+                     placeholder="Click for usages..." required>
+              <span class="input-group-btn">
+                <button class="btn btn-info btn-lg" type="submit"
+                        formmethod="post">
+                  <i class="fa fa-smile-o fa-lg"></i>
+                </button>
+              </span>
+            </div><!-- /input-group -->
+          </div>
+        </span>
+      </div><!-- /.col-lg-6 -->
+    <% end %>
+  </div>
 </div>

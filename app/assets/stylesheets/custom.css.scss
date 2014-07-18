@@ -2,13 +2,37 @@
 
 $grayMediumLight: #eaeaea;
 
+// Yelp Colored Theme
+$primarySchemeColor: #e5350a;
+$lighterPastelRed: #ffd5d1;
+
+$skyBlue: #4eabd1;
+$navbarHeight: 60px;
+$header_footer_fonts: "Helvetica Neue",Helvetica,Arial,sans-serif;
+
+* {
+  margin: 0;
+}
+
 /* universal */
 html {
   overflow-y: scroll;
 }
 
+html, body {
+  height: 100%;
+}
+
+.wrapper {
+  min-height: 100%;
+//  height: auto !important;
+  height: 100%;
+  margin: 0 auto;
+}
+
 body {
-  padding-top: 60px;
+  height: 100%;
+//  padding-top: 60px;
 //  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 //  font-size: 14px;
 //  line-height: 1.42857;
@@ -57,21 +81,56 @@ p {
   line-height: 1.7em;
 }
 
+/* navbar */
+.navbar-default {
+  background-color: $primarySchemeColor;
+  border-color: $primarySchemeColor;
+  height: $navbarHeight;
+  font-family: $header_footer_fonts;
+}
+
+.navbar-inverse {
+  background-color: #fff;
+  border-color: #fff;
+  color: #4da8ce;
+}
+
+.navbar-text-footer {
+  margin-top: 19.5px;
+  margin-bottom: 19.5px;
+  font-family: $header_footer_fonts;
+  color: #c3c4c6;
+}
+
+@media (min-width: 768px) {
+  .navbar-text-footer {
+    float: left;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  .navbar-text-footer.navbar-right:last-child {
+    margin-right: 0;
+  }
+}
+
 /* header */
 #logo {
   float: left;
   margin-right: 10px;
   font-size: 1.7em;
-  color: #414141;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: -1px;
   padding-top: 13px;
   font-weight: bold;
   line-height: 1;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  transition: all .3s;
 }
 
 #logo:hover {
-  color: #adadad;
+  color: $lighterPastelRed;
   text-decoration: none;
 }
 
@@ -88,7 +147,7 @@ p {
   position: absolute;
   bottom: 0px;
   width: 100%;
-  height: 60px;
+  height: $navbarHeight;
   background-color: #F5F5F5;
 }
 
@@ -104,4 +163,45 @@ p {
   width: 100%;
   margin-top: 45px;
   @include box_sizing;
+}
+
+.input-group-addon:not(:first-child):not(:last-child),
+.input-group-btn:not(:first-child):not(:last-child),
+.input-group .form-control:not(:first-child):not(:last-child) {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.padded-cont {
+  padding-top: $navbarHeight;
+  height: 100%;
+}
+
+.yelp-intro {
+  height: 100%;
+  padding-top: 40px;
+  padding-bottom: 100px;
+  text-align: center;
+  color: #fff;
+  background: $primarySchemeColor;
+}
+
+.simple-logo {
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  font-size: 220px;
+  color: $primarySchemeColor;
+  line-height: 100px;
+  letter-spacing: -20px;
+  vertical-align: middle;
+  background: #fff;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.btn-info {
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  transition: all .3s;
 }

@@ -40,6 +40,8 @@ GEM
     coffee-script-source (1.7.0)
     erubis (2.7.0)
     execjs (2.2.0)
+    font-awesome-sass (4.1.0)
+      sass (~> 3.2)
     google_visualr (2.3.0)
     hash-deep-merge (0.1.1)
     hike (1.2.3)
@@ -98,6 +100,7 @@ GEM
     rake (10.3.2)
     rdoc (4.1.1)
       json (~> 1.4)
+    rjb (1.4.9)
     sass (3.2.19)
     sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -140,6 +143,7 @@ PLATFORMS
 DEPENDENCIES
   bootstrap-sass (~> 3.1.1)
   coffee-rails (~> 4.0.0)
+  font-awesome-sass
   google_visualr (>= 2.1)
   jbuilder (~> 2.0)
   jquery-rails
@@ -150,6 +154,7 @@ DEPENDENCIES
   rails (= 4.1.1)
   rails4-autocomplete
   rails_12factor
+  rjb
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   spring

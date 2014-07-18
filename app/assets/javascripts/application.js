@@ -13,6 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.autocomplete
+//= require tipped
+//= require imagesloaded.pkgd.min
 //= require turbolinks
 //= require bootstrap
 //= require autocomplete-rails

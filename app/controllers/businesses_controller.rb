@@ -16,22 +16,26 @@ class BusinessesController < ApplicationController
 
   def results
     # Interpret the business name from post.
-    @business_name = params[:predict_params][:query_str]
+    @business_name = params[:predict_params][:query_str].strip
 
     if is_business_url @business_name
       # since it is a URL, retrieve page and parse.
       retrieve_business_info_from_url @business_name, false # update if found #
     else
       # Perform a lookup using the business name.  This will also have partial
-      # matching.
-      @search_results = Business.where("lower(#{BUSINESS_SEARCH_BY}) LIKE ?",
-                                       "%#{@business_name.downcase}%").order(
-                                         BUSINESS_SEARCH_ORDER_STR)
+      # matching.  Only proceed if it contains some characters
+      if /\S/  =~ @business_name
+        @search_results = Business.where("lower(#{BUSINESS_SEARCH_BY}) LIKE ?",
+                                         "%#{@business_name.downcase}%").order(
+          BUSINESS_SEARCH_ORDER_STR)
 
-      # If only 1 result, go directly to summary
-      if @search_results && @search_results.count == 1
-        curr_business = @search_results.first
-        redirect_to "#{businesses_path}/#{curr_business.id}"
+        # If only 1 result, go directly to summary
+        if @search_results && @search_results.count == 1
+          curr_business = @search_results.first
+          redirect_to "#{businesses_path}/#{curr_business.id}"
+        end
+      else
+        redirect_to root_path
       end
     end
   end

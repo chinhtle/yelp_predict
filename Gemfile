@@ -40,6 +40,11 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+# set JAVA_HOME so Heroku will install gems that need it
+heroku_java_home = '/usr/lib/jvm/java-6-openjdk'
+ENV['JAVA_HOME'] = heroku_java_home if Dir.exist?(heroku_java_home)
+gem 'rjb'
+
 gem 'rails_12factor', group: :production
 
 gem "google_visualr", ">= 2.1"
@@ -52,5 +57,7 @@ gem 'rails4-autocomplete'
 gem 'jquery-ui-rails'
 
 gem 'lazy_high_charts'
+
+gem 'font-awesome-sass'
 
 ruby "1.9.3"
