@@ -142,7 +142,7 @@ module UsersHelper
       file.classifyInstance(first);
       test_set = Rjb::import('weka.classifiers.Evaluation').new(instances)
       #get the prediction
-      result = test_set.evaluateModelOnceAndRecordPrediction(file, first)
+      result = test_set._invoke('evaluateModelOnceAndRecordPrediction', 'Lweka.classifiers.Classifier;Lweka.core.Instance;', file, first)
 	  if (result == 0.0)
 		result = "Extroverted"
 		else
