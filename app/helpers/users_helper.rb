@@ -75,31 +75,33 @@ module UsersHelper
       @indep_var['elite'] = elite.length
     
       #average_rating
-      sum = 0
-      #get sum of ratings for the profile home page
-      sum = get_sum(page)
-      #checks if more button exists
-      more_check = "p[style='margin:5px 0px;clear:both;text-align:right;']"
-      if(page.at_css(more_check))
-        more = page.css(more_check).css('a')[0]['href']
-        reviews_url = 'http://www.yelp.com' + more
-        more_page = Nokogiri::HTML(open(reviews_url, Common::CRAWL_USER_AGENT))
-        #add to the sum of ratings for the page after more is clicked
-        sum += get_sum(more_page)
-        #check if next button exists
-        next_check = 'a#pager_page_next'
-        #add the sum of ratings for each next page until there is no more next button
-        while(page.at_css(next_check))
-          next_page = page.css(next_check)[0]['href']
-          next_url = 'http://www.yelp.com' + next_page
-          sleep(2)
-          page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
-          sum += get_sum(page)
-        end
-      end
-      avg = sum/@indep_var["Reviews"]
-      @indep_var["Average"] = avg 
-      end
+	  if(@indep_var['Reviews'] > 0)
+		sum = 0
+		#get sum of ratings for the profile home page
+		sum = get_sum(page)
+		#checks if more button exists
+		more_check = "p[style='margin:5px 0px;clear:both;text-align:right;']"
+		if(page.at_css(more_check))
+			more = page.css(more_check).css('a')[0]['href']
+			reviews_url = 'http://www.yelp.com' + more
+			more_page = Nokogiri::HTML(open(reviews_url, Common::CRAWL_USER_AGENT))
+			#add to the sum of ratings for the page after more is clicked
+			sum += get_sum(more_page)
+			#check if next button exists
+			next_check = 'a#pager_page_next'
+			#add the sum of ratings for each next page until there is no more next button
+			while(page.at_css(next_check))
+			next_page = page.css(next_check)[0]['href']
+			next_url = 'http://www.yelp.com' + next_page
+			sleep(2)
+			page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
+			sum += get_sum(page)
+			end
+		end
+		avg = sum/@indep_var["Reviews"]
+		@indep_var["Average"] = avg 
+		end
+	end
     
     def get_prediction()
       #Load Java Jar
