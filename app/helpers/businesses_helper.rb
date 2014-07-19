@@ -7,8 +7,11 @@ require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 require 'common'
+require 'rjb'
 
 module BusinessesHelper
+  include UsersHelper
+
   CURR_DIR = File.dirname(__FILE__)
   DATA_PATH = File.join(CURR_DIR, '../../yelp_data')
   BUSINESS_DATA_PATH = "#{DATA_PATH}/business_data"
@@ -714,8 +717,9 @@ module BusinessesHelper
 
           # Grab the user's information and predict at given URL.  Store in
           # hash.
-          # TODO: Printing just for debug.  Remove later.
-          puts user_url
+          get_indep_var(user_url)
+          personality = get_prediction()
+          puts personality
         end
 
         # TODO: For all the obtained user info, get summary and store for
