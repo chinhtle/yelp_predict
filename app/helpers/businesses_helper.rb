@@ -517,7 +517,7 @@ module BusinessesHelper
   def print_businesses_search_results(results, business_name)
     puts "Adding businesses search results for #{business_name}"
 
-    if results
+    if results && (results.count > 0)
       res = ""
 
       elem_idx = 0

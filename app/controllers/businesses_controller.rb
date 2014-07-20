@@ -27,7 +27,7 @@ class BusinessesController < ApplicationController
       if /\S/  =~ @business_name
         @search_results = Business.where("lower(#{BUSINESS_SEARCH_BY}) LIKE ?",
                                          "%#{@business_name.downcase}%").order(
-          BUSINESS_SEARCH_ORDER_STR)
+                                         BUSINESS_SEARCH_ORDER_STR)
 
         # If only 1 result, go directly to summary
         if @search_results && @search_results.count == 1
