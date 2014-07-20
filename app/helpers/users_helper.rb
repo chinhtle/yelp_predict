@@ -5,6 +5,7 @@ module UsersHelper
     def add_item(item)
       key = item.gsub(/[^a-z ]/i, '')
       key = key.strip
+	  key = key.gsub(/$s/, '')
       value = item.to_i
       if !key.empty?
         @indep_var[key] = value
@@ -77,7 +78,7 @@ module UsersHelper
       @indep_var['elite'] = elite.length
     
       #average_rating
-	  if(@indep_var['Reviews'] > 0)
+	  if(@indep_var['Review'] > 0)
 		sum = 0
 		#get sum of ratings for the profile home page
 		sum = get_sum(page)
@@ -100,7 +101,7 @@ module UsersHelper
 			sum += get_sum(page)
 			end
 		end
-		avg = sum/@indep_var["Reviews"]
+		avg = sum/@indep_var["Review"]
 		@indep_var["Average"] = avg
 		end
 	end
@@ -124,11 +125,11 @@ module UsersHelper
       set_attribute(first, 0, "Funny")
       set_attribute(first, 1, "Useful")
       set_attribute(first, 2, "Cool")
-      set_attribute(first, 3, "Reviews")
-      set_attribute(first, 4, "Friends")
-      set_attribute(first, 5, "Fans")
+      set_attribute(first, 3, "Review")
+      set_attribute(first, 4, "Friend")
+      set_attribute(first, 5, "Fan")
       set_attribute(first, 6, "Average")
-      set_attribute(first, 7, "Compliments")
+      set_attribute(first, 7, "Compliment")
       set_attribute(first, 8, "elite")
       set_attribute(first, 9, "profile")
       set_attribute(first, 10, "cute")
