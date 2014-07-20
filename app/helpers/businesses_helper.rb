@@ -727,15 +727,19 @@ module BusinessesHelper
         # passing in the URL of this user.
         user_urls.each_key do |user_url|
           # Sleep with given time to avoid being marked as a crawler.
-          sleep(Common::GET_REQ_TIME) if DELAY_USER_REQUESTS
+          if DELAY_USER_REQUESTS
+            puts 'Delaying request for additional users..'
+            sleep(Common::GET_REQ_TIME)
+          end
 
           # Grab the user's information and predict at given URL.  Store in
           # hash.
+          puts "URL: #{user_url}"
           get_indep_var(user_url)
           personality = get_prediction()
 
           user_personality_hash[user_url] = personality
-          puts personality
+          puts "Personality: #{personality}"
         end
 
         # For all the obtained user info, get summary and store for
@@ -803,9 +807,22 @@ module BusinessesHelper
     # Address needs to be split into city, state, and formatted full address.
     # Format: 80 N Market St, San Jose, CA 95113
     address = address.split(',')
-    city = address[1].strip
-    state = address[2].split(' ')[0]
-    full_address = "#{address[0]}\n#{address[1]},#{address[2]}"
+
+    offset = 0
+    if address.count == 3
+      offset = 1
+    end
+
+    city = address[offset].strip
+    state = address[offset + 1].split(' ')[0]
+
+    if offset == 1
+      street = address[0]
+    else
+      street = ""
+    end
+    
+    full_address = "#{street}\n#{address[offset]},#{address[offset + 1]}"
 
     business_info_hash[business_id][BUSINESS_INFO_KEYS[:city_key]] = city
     business_info_hash[business_id][BUSINESS_INFO_KEYS[:state_key]] = state

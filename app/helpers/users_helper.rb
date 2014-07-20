@@ -99,7 +99,9 @@ module UsersHelper
 			while(page.at_css(next_check))
 			next_page = page.css(next_check)[0]['href']
 			next_url = 'http://www.yelp.com' + next_page
-			sleep(Common::GET_REQ_TIME) if DELAY_REVIEW_PAGE_REQUESTS
+      if DELAY_REVIEW_PAGE_REQUESTS
+			  sleep(Common::GET_REQ_TIME)
+      end
 			page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
 			sum += get_sum(page)
 			end
