@@ -71,6 +71,9 @@ module BusinessesHelper
   # Flag for enabling adding review text to the remapping function.
   ADD_REVIEW_TEXTS = false
 
+  # Flag for delaying requests for user predictions.
+  DELAY_USER_REQUESTS = false
+
   def load_bus_data
     puts 'Loading business data..'
 
@@ -724,7 +727,7 @@ module BusinessesHelper
         # passing in the URL of this user.
         user_urls.each_key do |user_url|
           # Sleep with given time to avoid being marked as a crawler.
-          sleep(Common::GET_REQ_TIME)
+          sleep(Common::GET_REQ_TIME) if DELAY_USER_REQUESTS
 
           # Grab the user's information and predict at given URL.  Store in
           # hash.

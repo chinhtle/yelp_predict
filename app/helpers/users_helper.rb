@@ -1,6 +1,9 @@
 require 'common'
 
 module UsersHelper
+  # Flag to enable delaying of page requests.
+  DELAY_REVIEW_PAGE_REQUESTS = false
+
   #function for adding item to hash
     def add_item(item)
       key = item.gsub(/[^a-z ]/i, '')
@@ -96,7 +99,7 @@ module UsersHelper
 			while(page.at_css(next_check))
 			next_page = page.css(next_check)[0]['href']
 			next_url = 'http://www.yelp.com' + next_page
-			sleep(Common::GET_REQ_TIME)
+			sleep(Common::GET_REQ_TIME) if DELAY_REVIEW_PAGE_REQUESTS
 			page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
 			sum += get_sum(page)
 			end
