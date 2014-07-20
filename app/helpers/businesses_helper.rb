@@ -106,9 +106,11 @@ module BusinessesHelper
 
         # Now that the data is associated, we can pass the hash of users
         # with their personality to the method to obtain a summary of the types
-        # of personalities for the business.
+        # of personalities for the business.  Don't bypass the limit, so set
+        # final argument to false.  Since this function is called to load
+        # initial DB.
         summarize_and_add_business_to_db(business_customers_hash,
-                                         business_info_hash)
+                                         business_info_hash, false)
       end
 
       puts 'Loaded all data successfully.'
@@ -120,7 +122,8 @@ module BusinessesHelper
     end
   end
 
-  def summarize_and_add_business_to_db(business_hash, business_info_hash)
+  def summarize_and_add_business_to_db(business_hash, business_info_hash,
+                                       bypass_limit)
     puts 'Summarizing and adding business to DB..'
 
     # Go through each business and get the summary of the personality types
@@ -144,15 +147,16 @@ module BusinessesHelper
           puts "\t#{personality}: #{value}"
         end
 
-        add_business_to_model_by_hash(business_id, tmp_hash, business_info)
+        add_business_to_model_by_hash(business_id, tmp_hash, business_info,
+                                      bypass_limit)
       end
     end
   end
 
   def add_business_to_model_by_hash(business_id, summary_hash,
-                                    business_info_hash)
+                                    business_info_hash, bypass_limit)
     # Add the new entry to the table
-    if Business.count < HEROKU_DB_RECORD_LIMIT
+    if (Business.count < HEROKU_DB_RECORD_LIMIT) || bypass_limit
       Business.create(
         business_id:       business_id,
         name:              business_info_hash[BUSINESS_INFO_KEYS[:name_key]],
@@ -739,12 +743,15 @@ module BusinessesHelper
         retrieve_business_info_from_page page, business_info_hash,
                                          retrieved_bus_id
 
-        # Get summary using the user_personality_hash and business_hash
-        summarize_and_add_business_to_db business_hash, business_info_hash
+        # Get summary using the user_personality_hash and business_hash.
+        # Set final argument as true to bypass the DB limit.
+        summarize_and_add_business_to_db(business_hash, business_info_hash,
+                                         true)
 
         # Find the business in the database and render page.
         business = Business.find_by(business_id: retrieved_bus_id)
         if business.nil?
+          puts 'There was an issue with adding business..Cannot find it.'
           error = true
         end
       else
