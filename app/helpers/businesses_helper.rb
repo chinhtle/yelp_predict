@@ -753,13 +753,16 @@ module BusinessesHelper
         puts 'Business found based on business-id obtained from the URL.'
       end
 
-      if error
+      business_id = 0
+      if !error
+        business_id = business.id
+      else
         # Since error, just display an error by setting found false.
         # The show action will automatically display error page.
         @found = false
       end
 
-      redirect_to "#{businesses_path}/#{business.id}"
+      redirect_to "#{businesses_path}/#{business_id}"
     end
   end
 
