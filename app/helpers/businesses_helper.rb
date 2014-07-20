@@ -463,6 +463,8 @@ module BusinessesHelper
                   |file| File.file?(file)
                 }.count
 
+    success = false
+
     if num_files > 0
       index = 1 # Files start at 1 base
 
@@ -479,10 +481,7 @@ module BusinessesHelper
                           Zlib::GzipReader.open(file_path))
         tar_extract.rewind # The extract has to be rewound after each iteration
         tar_extract.each do |entry|
-          puts entry.full_name
-          puts entry.directory?
-          puts entry.file?
-
+          puts "Extracting #{entry.full_name}"
           extracted_file.write(entry.read)
         end
         tar_extract.close
@@ -494,8 +493,9 @@ module BusinessesHelper
       success = true
     else
       puts 'No files to extract.'
-      success = false
     end
+
+    return success
   end
 
   def delete_extracted_data
@@ -710,7 +710,7 @@ module BusinessesHelper
 
         for i in 0..pages.length-1
           # Sleep with given time to avoid being marked as a crawler.
-          sleep(GET_REQ_TIME)
+          sleep(Common::GET_REQ_TIME)
 
           # Reload the page using the parsed URL
           new_url = pages[i]['href']
