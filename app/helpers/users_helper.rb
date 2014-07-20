@@ -5,7 +5,7 @@ module UsersHelper
     def add_item(item)
       key = item.gsub(/[^a-z ]/i, '')
       key = key.strip
-	  key = key.gsub(/$s/, '')
+	  key = key.gsub(/s$/, '')
       value = item.to_i
       if !key.empty?
         @indep_var[key] = value
