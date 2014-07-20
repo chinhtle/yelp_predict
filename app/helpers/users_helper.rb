@@ -1,3 +1,5 @@
+require 'common'
+
 module UsersHelper
   #function for adding item to hash
     def add_item(item)
@@ -93,13 +95,13 @@ module UsersHelper
 			while(page.at_css(next_check))
 			next_page = page.css(next_check)[0]['href']
 			next_url = 'http://www.yelp.com' + next_page
-			sleep(2)
+			sleep(Common::GET_REQ_TIME)
 			page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
 			sum += get_sum(page)
 			end
 		end
 		avg = sum/@indep_var["Reviews"]
-		@indep_var["Average"] = avg 
+		@indep_var["Average"] = avg
 		end
 	end
     
