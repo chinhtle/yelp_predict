@@ -856,7 +856,7 @@ module BusinessesHelper
   def draw_business_summary_card business
     res =   '<div class="col-xs-12 col-md-6">'
     res <<     '<div class="well well-sm">'
-    res <<       '<div class="row card">'
+    res <<       '<div class="row">'
 
     # Add business info
     res <<        add_business_info(business)
