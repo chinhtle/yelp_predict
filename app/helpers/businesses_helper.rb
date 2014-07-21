@@ -663,6 +663,12 @@ module BusinessesHelper
     res << addr_array[0]
     res << '<br>'
     res << addr_array[1]
+
+    if addr_array.count == 3
+      res << '<br>'
+      res << addr_array[2]
+    end
+
     res << '</h2>'
 
     return res.html_safe
@@ -821,7 +827,7 @@ module BusinessesHelper
     else
       street = ""
     end
-    
+
     full_address = "#{street}\n#{address[offset]},#{address[offset + 1]}"
 
     business_info_hash[business_id][BUSINESS_INFO_KEYS[:city_key]] = city
