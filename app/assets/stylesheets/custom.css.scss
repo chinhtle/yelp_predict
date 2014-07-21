@@ -241,7 +241,13 @@ a {
 
 a:hover
 {
+  font-size: 23px;
   color: $skyBlue;
   text-decoration:none;
   cursor:pointer;
+}
+
+.card {
+  max-height: 130px;
+  max-width: 450px;
 }

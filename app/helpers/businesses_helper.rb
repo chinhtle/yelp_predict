@@ -659,17 +659,24 @@ module BusinessesHelper
   def show_address address
     addr_array = address.split("\n")
 
-    res = '<h2>'
-    res << addr_array[0]
-    res << '<br>'
+    res = addr_array[0]
+
+    # If there is suite #, the array count would be == 3.  Ste will be on the
+    # same line. If less than three, then we should add a newline.
+    if addr_array.count < 3
+      res << '<br>'
+    else
+      # Since suite # is included, there should be at least a space between
+      # the street name and the suite #.
+      res << ' '
+    end
+
     res << addr_array[1]
 
     if addr_array.count == 3
       res << '<br>'
       res << addr_array[2]
     end
-
-    res << '</h2>'
 
     return res.html_safe
   end
@@ -849,7 +856,7 @@ module BusinessesHelper
   def draw_business_summary_card business
     res =   '<div class="col-xs-12 col-md-6">'
     res <<     '<div class="well well-sm">'
-    res <<       '<div class="row">'
+    res <<       '<div class="row card">'
 
     # Add business info
     res <<        add_business_info(business)
@@ -875,8 +882,7 @@ module BusinessesHelper
     res <<     '<div class="address">'
 
     # Add the address
-    address = business.full_address.split("\n")
-    res <<       "<i>#{address[0]}<br>#{address[1]}</i>"
+    res <<        show_address(business.full_address)
     res <<     '</div>'
     res <<   '</h2>'
     res << '</div>'
