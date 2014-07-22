@@ -898,6 +898,9 @@ module BusinessesHelper
     # passed as the value now, and the percentage will be calculated prior
     # to being passed in.
     total_personality = business.num_introverted + business.num_extroverted
+    puts "Num introverted: #{business.num_introverted}"
+    puts "Num extroverted: #{business.num_extroverted}"
+    puts "Total: #{total_personality}"
 
     # First, we draw the extroverted:
     res << add_extrovert_personality_bar(total_personality,
@@ -924,11 +927,15 @@ module BusinessesHelper
 
   def add_extrovert_personality_bar total, num_extroverted
     if total != 0
-      percentage = (num_extroverted / total) * 100
+      percentage = (num_extroverted.to_f / total.to_f) * 100
     else
       # If no personality, just set as 0.
       percentage = 0
     end
+
+    # Round the float to 1 decimal
+    percentage = percentage.round(1)
+    puts "add_extrovert_personality_bar - Percentage: #{percentage}"
 
     return draw_personality_bar(num_extroverted, percentage,
                                 Personality::EXTROVERTED)
@@ -936,11 +943,15 @@ module BusinessesHelper
 
   def add_introvert_personality_bar total, num_introverted
     if total != 0
-      percentage = (num_introverted / total) * 100
+      percentage = (num_introverted.to_f / total.to_f) * 100
     else
       # If no personality, just set as 0.
       percentage = 0
     end
+
+    # Round the float to 1 decimal
+    percentage = percentage.round(1)
+    puts "add_introvert_personality_bar - Percentage: #{percentage}"
 
     return draw_personality_bar(num_introverted, percentage,
                                 Personality::INTROVERTED)
