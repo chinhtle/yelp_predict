@@ -31,6 +31,8 @@ module UsersHelper
     def set_attribute(inst, loc, key)
       if(@indep_var.has_key?(key))
         inst.setValue(loc, @indep_var[key])
+	  else
+        @indep_var[key] = 0
       end
     end
     
@@ -107,6 +109,7 @@ module UsersHelper
 			end
 		end
 		avg = sum/@indep_var["Review"]
+		avg = avg.round(1)
 		@indep_var["Average"] = avg
 		end
 	end
