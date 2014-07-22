@@ -920,21 +920,18 @@ module BusinessesHelper
 
     res <<   '</div>'
 
-    # Add the rating as stars
-    res <<    draw_rating_stars(business.stars)
-
-    # Add the total number of reviews
-    res <<    draw_review_count(business.review_count)
+    # Add the rating as stars and review count
+    res <<    draw_rating_stars_and_reviews(business.stars, business.review_count)
     res << '</div>'
 
     return res
   end
 
   def draw_review_count reviews
-    res =  '<div>'
-    res <<   '<span class="glyphicon glyphicon-user"></span>'
-    res <<      reviews.to_s
-    res << '</div>'
+    res =  '<font color="#cecece">&nbsp&nbsp'
+    res <<   '<i class="fa fa-user fa-2x"></i>&nbsp'
+    res <<   reviews.to_s
+    res << '</font>'
 
     return res
   end
@@ -990,7 +987,7 @@ module BusinessesHelper
     return res
   end
 
-  def draw_rating_stars rating
+  def draw_rating_stars_and_reviews rating, reviews
     total_stars = 5
     full_stars = (rating / 1).to_i
     enable_half_star = false
@@ -1025,6 +1022,8 @@ module BusinessesHelper
       res << "<i class=\"fa fa-star-o #{star_size}\"></i>"
     end
 
+    # Add the total number of reviews
+    res <<    draw_review_count(reviews)
     res << '</div>'
 
     return res

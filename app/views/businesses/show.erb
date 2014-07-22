@@ -19,8 +19,7 @@
     <div class="container">
       <h1><b><%= @business_name.upcase %></b></h1>
       <div class="yelp-intro-text"><%= show_address @business_address %></div>
-      <div class="yelp-intro-text"><%= draw_rating_stars(@business_rating).html_safe %></div>
-      <div class="yelp-intro-text"><%= draw_review_count(@business_reviews).html_safe%></div>
+      <div class="yelp-intro-text"><%= draw_rating_stars_and_reviews(@business_rating, @business_reviews).html_safe %></div>
     </div>
   </div>
   <div class="container">
