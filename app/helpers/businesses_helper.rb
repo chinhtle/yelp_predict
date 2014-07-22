@@ -72,7 +72,7 @@ module BusinessesHelper
   ADD_REVIEW_TEXTS = false
 
   # Flag for delaying requests for user predictions.
-  DELAY_USER_REQUESTS = false
+  DELAY_USER_REQUESTS = true
 
   def load_bus_data
     puts 'Loading business data..'
