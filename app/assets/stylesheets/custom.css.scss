@@ -267,6 +267,16 @@ a:hover
   color: $skyBlue
 }
 
+.variable-text {
+  color: $skyBlue;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.variable-icon-block {
+  margin-bottom: 10px;
+}
+
 .personality-description {
   text-align: justify;
 }
