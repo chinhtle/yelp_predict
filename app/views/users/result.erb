@@ -1,2 +1,25 @@
-<h1>Result Homepage</h1>
-<%= @data %>
+<h1>
+  You are 
+  <br>
+  <b><font size="100"><%= @data %></font></b>
+</h1>
+<h2>
+	<%= @description%>
+</h2>
+<h2>
+	<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">What variables determined your personality?</div>
+  <span>Number of Friends: <%= @indep_var['Friend']%></span>
+  <br>
+  <span>Number of Reviews: <%= @indep_var['Review']%></span>
+  <br>
+  <span>Number of Fans: <%= @indep_var['Fan']%></span>
+  <br>
+  <span>Number of times Elite: <%= @indep_var['elite']%></span>
+  <br>
+  <span>Average rating given: <%= @indep_var['Average']%></span>
+  </div>
+	<span class="glyphicon glyphicon-star"></span>
+</h2>
+

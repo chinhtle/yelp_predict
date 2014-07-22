@@ -96,14 +96,14 @@ module UsersHelper
 			#check if next button exists
 			next_check = 'a#pager_page_next'
 			#add the sum of ratings for each next page until there is no more next button
-			while(page.at_css(next_check))
-			next_page = page.css(next_check)[0]['href']
+			while(more_page.at_css(next_check))
+			next_page = more_page.css(next_check)[0]['href']
 			next_url = 'http://www.yelp.com' + next_page
       if DELAY_REVIEW_PAGE_REQUESTS
 			  sleep(Common::GET_REQ_TIME)
       end
-			page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
-			sum += get_sum(page)
+			more_page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
+			sum += get_sum(more_page)
 			end
 		end
 		avg = sum/@indep_var["Review"]
