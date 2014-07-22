@@ -625,33 +625,41 @@ module BusinessesHelper
       series = {
         :type=> 'pie',
         :name=> 'Personality Summary',
-        :data=> data_array
+        :data=> data_array,
+        :inner_size=> '40%',
       }
       f.series(series)
       # f.options[:title][:text] = "Personality Summary"
       f.legend(:layout=> 'vertical',:style=> {:left=> 'auto', :bottom=> 'auto',
-                                              :right=> '50px',:top=> '100px'})
+                                              :right=> 'auto',:top=> 'auto'})
       f.plot_options(:pie=>{:allowPointSelect=>true,
                             :cursor=>"pointer" ,
                             :dataLabels=>{:enabled=>true,
-                                          :color=>"black",
+                                          :inner_size=> '50%',
+                                          :distance=> -50,
                                           :style=>{:font=>"13px Trebuchet MS, "\
                                                           "Verdana, "\
-                                                          "sans-serif"}}})
+                                                          "sans-serif",
+                                                   :fontWeight=> 'bold',
+                                                   :color=> 'white',
+                                                   :textShadow=> '0px 1px 2px black'}}})
     end
   end
 
   def show_personality_description personality_type
-    res = '<h2>'
-    res << '<b>'
-    res << "#{Personality::INTRO_EXTRO_TO_BUSINESS_TERM[personality_type]} "
-    res << '</b>'
-    res << '<i>'
-    res << '<br>'
-    res << Personality::INTRO_EXTRO_PRONOUNCE[personality_type]
-    res << '</i>'
-    res << '<br><br>'
-    res << Personality::INTRO_EXTRO_DESCRIPTION[personality_type]
+    res =  '<h2>'
+    res <<   '<b>'
+    res <<     '<div class="personality-text">'
+    res <<       "#{Personality::INTRO_EXTRO_TO_BUSINESS_TERM[personality_type]} "
+    res <<     '</div>'
+    res <<   '</b>'
+    res <<   '<i>'
+    res <<     Personality::INTRO_EXTRO_PRONOUNCE[personality_type]
+    res <<   '</i>'
+    res <<   '<br><br>'
+    res <<   '<div class="personality-description">'
+    res <<     Personality::INTRO_EXTRO_DESCRIPTION[personality_type]
+    res <<   '</div>'
     res << '</h2>'
     return res.html_safe
   end
@@ -916,10 +924,16 @@ module BusinessesHelper
     res <<    draw_rating_stars(business.stars)
 
     # Add the total number of reviews
-    res <<   '<div>'
-    res <<     '<span class="glyphicon glyphicon-user"></span>'
-    res <<        business.review_count.to_s
-    res <<   '</div>'
+    res <<    draw_review_count(business.review_count)
+    res << '</div>'
+
+    return res
+  end
+
+  def draw_review_count reviews
+    res =  '<div>'
+    res <<   '<span class="glyphicon glyphicon-user"></span>'
+    res <<      reviews.to_s
     res << '</div>'
 
     return res

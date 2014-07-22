@@ -14,27 +14,33 @@
 <noscript>
   <meta http-equiv="refresh" content="2;url=http://yoursite.com/nojswarning.html">
 </noscript>
-<div class="container">
-  <% if @found %>
-    <h1><%= @business_name %></h1>
-    <h2><%= show_address @business_address %></h2>
-    <h2><b><i>Rating: </i></b><%= @business_rating %></h2>
+<% if @found %>
+  <div class="yelp-intro-fitted">
+    <div class="container">
+      <h1><b><%= @business_name.upcase %></b></h1>
+      <div class="yelp-intro-text"><%= show_address @business_address %></div>
+      <div class="yelp-intro-text"><%= draw_rating_stars(@business_rating).html_safe %></div>
+      <div class="yelp-intro-text"><%= draw_review_count(@business_reviews).html_safe%></div>
+    </div>
+  </div>
+  <div class="container">
     <%= show_personality_description @business_dominant %>
-
-    <div id='chart' style="width: 100%"></div>
-    <% if @pie_chart_google_visualr %>
-      <%= render_chart @chart, 'chart' %>
-    <% else %>
-      <%= high_chart('chart', @chart) do |c| %>
-        <%= raw "options.tooltip.formatter = function() "\
-                "{return '<b>' + this.point.name +'</b>: '+ "\
-                "this.y;}"  %>
-        <%= raw "options.plotOptions.pie.dataLabels.formatter = function() "\
-                "{return '<b>' + this.point.name +'</b>: '+ "\
-                "((this.y/#{@all_personalities})*100).toFixed(1) +' %';}"  %>
-      <% end %>
-    <% end %>
+  </div>
+  <div id='chart' style="width: 100%; min-width: 310px"></div>
+  <% if @pie_chart_google_visualr %>
+    <%= render_chart @chart, 'chart' %>
   <% else %>
-    <%= display_invalid_bus_id %>
+    <%= high_chart('chart', @chart) do |c| %>
+      <%= raw "options.tooltip.formatter = function() "\
+              "{return '<b>' + this.point.name +'</b>: '+ "\
+              "this.y;}"  %>
+      <%= raw "options.plotOptions.pie.dataLabels.formatter = function() "\
+              "{return '<b>' + this.point.name +'</b>: '+ "\
+              "((this.y/#{@all_personalities})*100).toFixed(1) +' %';}"  %>
+    <% end %>
   <% end %>
-</div>
+<% else %>
+  <div class="container">
+    <%= display_invalid_bus_id %>
+  </div>
+<% end %>

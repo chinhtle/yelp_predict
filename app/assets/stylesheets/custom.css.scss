@@ -251,3 +251,22 @@ a:hover
   max-height: 130px;
   max-width: 450px;
 }
+
+.yelp-intro-text {
+    font-size: 1.7em;
+    letter-spacing: -1px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: normal;
+    line-height: 25px;
+    color: #cecece;
+}
+
+.personality-text {
+  font-size: 1.5em;
+  color: $skyBlue
+}
+
+.personality-description {
+  text-align: justify;
+}

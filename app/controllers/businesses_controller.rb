@@ -53,6 +53,7 @@ class BusinessesController < ApplicationController
       @business_address = "#{business.full_address}"
       @business_rating = business.stars
       @business_dominant = business.dominant_type
+      @business_reviews = business.review_count
 
       if PIE_CHART_TYPE_GOOGLE_VISUALR
         @@pie_chart_google_visualr = true
