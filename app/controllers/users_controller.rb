@@ -15,5 +15,6 @@ include UsersHelper
     #parse independent variables stored in @indep_var
     get_indep_var(url)
     @data = get_prediction()
+	@description = Personality::INTRO_EXTRO_DESCRIPTION[@data]
   end
 end
