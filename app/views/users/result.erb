@@ -10,7 +10,7 @@
           size: 'large',
           skin: 'light',
           position: 'top',
-          close: true
+          close: false
         });
   });
 </script>
@@ -36,10 +36,12 @@
       <div>Each type of compliment</div>
       <div>
         <div style = "display:inline-block;">
-          <i title="Like Your Profile" class="fa fa-user"></i>
-          <div>
-            <%= @indep_var['profile']%>
-          </div>
+          <span class='function' data-content='Like Your Profile'>
+            <i class="fa fa-user"></i>
+            <div>
+              <%= @indep_var['profile']%>
+            </div>
+          </span>
         </div>
         <div style = "display:inline-block;">
           <span class='function' data-content='Cute Pic'>
