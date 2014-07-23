@@ -8,6 +8,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'common'
 require 'rjb'
+require 'proxy'
 
 module BusinessesHelper
   include UsersHelper
@@ -72,7 +73,7 @@ module BusinessesHelper
   ADD_REVIEW_TEXTS = false
 
   # Flag for delaying requests for user predictions.
-  DELAY_USER_REQUESTS = true
+  DELAY_USER_REQUESTS = false
 
   def load_bus_data
     puts 'Loading business data..'
@@ -696,7 +697,9 @@ module BusinessesHelper
   # Good business profile used for testing:
   # http://www.yelp.com/biz/bay-area-testing-center-millbrae
   def retrieve_business_info_from_url business_url, update_if_found
-    page = Nokogiri::HTML(open(business_url, Common::CRAWL_USER_AGENT))
+    proxy = Proxy.new
+    result = proxy.request_response(business_url)
+    page = Nokogiri::HTML(result.body, 'UTF-8')
 
     # First obtain the business-id and check if we already have it in our
     # database, if so, we can proceed to redirect the user to the results page.
@@ -738,7 +741,8 @@ module BusinessesHelper
 
           # Reload the page using the parsed URL
           new_url = pages[i]['href']
-          page = Nokogiri::HTML(open(new_url, Common::CRAWL_USER_AGENT))
+          result = proxy.request_response(new_url)
+          page = Nokogiri::HTML(result.body, 'UTF-8')
 
           # Get all user_ids on the new page.
           retrieve_users_from_page page, user_urls

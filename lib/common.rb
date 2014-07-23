@@ -4,5 +4,5 @@ class Common
   }
 
   # Time to wait between each request to avoid being identified as crawler
-  GET_REQ_TIME = 2 # seconds
+  GET_REQ_TIME = 0.5 # seconds
 end

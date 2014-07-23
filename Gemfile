@@ -59,5 +59,6 @@ gem 'jquery-ui-rails'
 gem 'lazy_high_charts'
 
 gem 'font-awesome-sass'
+gem 'mechanize'
 
 ruby "1.9.3"

@@ -1,4 +1,5 @@
 require 'common'
+require 'proxy'
 
 module UsersHelper
   # Flag to enable delaying of page requests.
@@ -39,7 +40,10 @@ module UsersHelper
     #function for parsing independent variables
     def get_indep_var(url)
       #Get page
-      page = Nokogiri::HTML(open(url, Common::CRAWL_USER_AGENT)) 
+
+      proxy = Proxy.new
+      result = proxy.request_response(url)
+      page = Nokogiri::HTML(result.body, 'UTF-8')
       #puts page.class   # => Nokogiri::HTML::Document
     
       #user_stats block
@@ -92,7 +96,8 @@ module UsersHelper
 		if(page.at_css(more_check))
 			more = page.css(more_check).css('a')[0]['href']
 			reviews_url = 'http://www.yelp.com' + more
-			more_page = Nokogiri::HTML(open(reviews_url, Common::CRAWL_USER_AGENT))
+      result = proxy.request_response(reviews_url)
+      more_page = Nokogiri::HTML(result.body, 'UTF-8')
 			#add to the sum of ratings for the page after more is clicked
 			sum += get_sum(more_page)
 			#check if next button exists
@@ -104,7 +109,8 @@ module UsersHelper
       if DELAY_REVIEW_PAGE_REQUESTS
 			  sleep(Common::GET_REQ_TIME)
       end
-			more_page = Nokogiri::HTML(open(next_url, Common::CRAWL_USER_AGENT))
+      result = proxy.request_response(next_url)
+      more_page = Nokogiri::HTML(result.body, 'UTF-8')
 			sum += get_sum(more_page)
 			end
 		end
