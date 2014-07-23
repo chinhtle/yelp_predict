@@ -40,7 +40,7 @@ module UsersHelper
     def get_indep_var(url)
       #Get page
 	  if url == "http://www.yelp.com/user_details?userid=local"
-		url = url = "#{Rails.root}/yelp_data/offline/users/yelp_home.htm"
+		url = "#{Rails.root}/yelp_data/offline/users/yelp_home.htm"
 	  end
       page = Nokogiri::HTML(open(url, Common::CRAWL_USER_AGENT)) 
       #puts page.class   # => Nokogiri::HTML::Document
@@ -95,7 +95,7 @@ module UsersHelper
 		more_check = "p[style='margin:5px 0px;clear:both;text-align:right;']"
 		if(page.at_css(more_check))
 			more = page.css(more_check).css('a')[0]['href']
-			if url == "http://www.yelp.com/user_details?userid=local"
+			if url == "#{Rails.root}/yelp_data/offline/users/yelp_home.htm"
 				reviews_url = "#{Rails.root}/yelp_data/offline/users/more_page.htm"
 			else
 				reviews_url = 'http://www.yelp.com' + more
@@ -108,7 +108,7 @@ module UsersHelper
 			#add the sum of ratings for each next page until there is no more next button
 			while(more_page.at_css(next_check))
 			next_page = more_page.css(next_check)[0]['href']
-			if url == "http://www.yelp.com/user_details?userid=local"
+			if url == "#{Rails.root}/yelp_data/offline/users/yelp_home.htm"
 				local_next = 'page_' + local_num.to_s + '.htm'
 				next_url = "#{Rails.root}/yelp_data/offline/users/" + local_next
 			else
