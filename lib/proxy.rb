@@ -20,14 +20,15 @@ class Proxy
   end
 
   def request_response(uri_str, limit = 10)
-    retries = 0
+    retries = 1
 
     begin
       page = get_page(uri_str)
       status_code = page.code.to_i
 
       puts "Received status code: #{status_code}"
-    rescue Errno::ETIMEDOUT, Timeout::Error, Mechanize::ResponseCodeError
+    rescue Errno::ETIMEDOUT, Timeout::Error, Mechanize::ResponseCodeError,
+           Net::HTTPForbidden
       if retries < FORBIDDEN_REQ_RETRIES
         puts "Received error.. Retrying. Request num: #{retries}"
         page = get_page(uri_str)
