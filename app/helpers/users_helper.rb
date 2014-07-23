@@ -47,6 +47,7 @@ module UsersHelper
       proxy = Proxy.new
       result = proxy.request_response(url)
       page = Nokogiri::HTML(result.body, 'UTF-8')
+
       #puts page.class   # => Nokogiri::HTML::Document
     
       #user_stats block
