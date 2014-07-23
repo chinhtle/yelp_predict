@@ -13,144 +13,185 @@
         });
   });
 </script>
-<h1>
-  You are 
-  <br>
-  <b><font size="100"><%= @data %></font></b>
-</h1>
-<h2>
-	<%= @description%>
-</h2>
-<h2>
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading">What variables determined your personality?</div>
-    <div>
-      <div>Number of Friends: <%= @indep_var['Friend']%></div>
-      <div>Number of Reviews: <%= @indep_var['Review']%></div>
-      <div>Number of Fans: <%= @indep_var['Fan']%></div>
-      <div>Number of times Elite: <%= @indep_var['elite']%></div>
-      <div>Average rating given: <%= @indep_var['Average']%> <i class="fa fa-star"></i> </div>
-      <div>Number of compliments: <%= @indep_var['Compliment']%></div>
-      <div>Each type of compliment</div>
-      <div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Like Your Profile'>
-            <i class="fa fa-user"></i>
-            <div>
-              <%= @indep_var['profile']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Cute Pic'>
-            <i class="fa fa-heart"></i>
-            <div>
-              <%= @indep_var['cute']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content="You're Funny">
-            <i class="fa fa-smile-o"></i>
-            <div>
-              <%= @indep_var['funny']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Thank You'>
-            <i class="fa fa-gift"></i>
-            <div>
-              <%= @indep_var['plain']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Good Writer'>
-            <i class="fa fa-pencil"></i>
-            <div>
-              <%= @indep_var['writer']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Great Lists'>
-            <i class="fa fa-list"></i>
-            <div>
-              <%= @indep_var['list']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Just a Note'>
-            <i class="fa fa-file-o"></i>
-            <div>
-              <%= @indep_var['note']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Great Photo'>
-            <i class="fa fa-picture-o"></i>
-            <div>
-              <%= @indep_var['photos']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Hot Stuff'>
-            <i class="glyphicon glyphicon-fire"></i>
-            <div>
-              <%= @indep_var['hot']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Write More'>
-            <i class="fa fa-plus"></i>
-            <div>
-              <%= @indep_var['more']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content="You're Cool">
-            <i class="fa fa-cloud"></i>
-            <div>
-              <%= @indep_var['cool']%>
-            </div>
-          </span>
-        </div>
-      </div>
-      <div>Each type of vote</div>
-      <div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Useful'>
-            <i class="fa fa-thumbs-up"></i>
-            <div>
-              <%= @indep_var['Useful']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Funny'>
-            <i class="fa fa-smile-o"></i>
-            <div>
-              <%= @indep_var['Funny']%>
-            </div>
-          </span>
-        </div>
-        <div style = "display:inline-block;">
-          <span class='function' data-content='Cool'>
-            <i class="fa fa-cloud"></i>
-            <div>
-              <%= @indep_var['Cool']%>
-            </div>
-          </span>
-        </div>
-      </div>
-  </div>
+<div class="yelp-intro-fitted"
+	<h1>
+		<div class="personality-text">
+  			<font size="75" color="white">You are </font><b><font size="100"><%= @data %></font></b>
+  		</div>
+	</h1>
+	<h2>
+		<%= @description%>
+	</h2>
 </div>
-</h2>
 
+
+<h2>
+	<div class="panel panel-default">
+		<div class="panel-heading">What variables determined your personality?</div>
+	</div>
+	
+	<div id="variables">
+		<div class="row">
+  			<div class="col-xs-6 col-md-4">
+  				<div class="panel panel-default">
+  					<div class="variable-text">Number of Friends: </div> <%= @indep_var['Friend']%>
+  				</div>
+  			</div>
+  			<div class="col-xs-6 col-md-4">
+  				<div class="panel panel-default">
+  					<div class="variable-text">Number of Reviews: </div> <%= @indep_var['Review']%>
+  				</div>
+  			</div>
+  			<div class="col-xs-6 col-md-4">
+  				<div class="panel panel-default">
+  					<div class="variable-text">Number of Fans: </div> <%= @indep_var['Fan']%>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="row">
+  			<div class="col-xs-6 col-md-4">
+  				<div class="panel panel-default">
+  					<div class="variable-text">Number of times Elite: </div> <%= @indep_var['elite']%>
+  				</div>
+  			</div>
+  			<div class="col-xs-6 col-md-4">
+  				<div class="panel panel-default">
+  					<div class="variable-text">Average rating given: </div> <%= @indep_var['Average']%> <i class="fa fa-star"></i>
+  				</div>
+  			</div>
+  			<div class="col-xs-6 col-md-4">
+  				<div class="panel panel-default">
+  					<div class="variable-text">Number of compliments: </div> <%= @indep_var['Compliment']%>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="row">
+  			<div class="col-xs-12 col-md-8">
+  				<div class="panel panel-default">
+    				<div class="variable-text">Each type of compliment</div> 
+    				<div class="variable-icon-block">
+   						<div style = "display:inline-block;">
+          					<span class='function' data-content='Like Your Profile'>
+            				<i class="fa fa-user"></i>
+            				<div>
+              					<%= @indep_var['profile']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Cute Pic'>
+            				<i class="fa fa-heart"></i>
+            				<div>
+              					<%= @indep_var['cute']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content="You're Funny">
+            				<i class="fa fa-smile-o"></i>
+            				<div>
+              					<%= @indep_var['funny']%>
+            				</div>
+          					</span>
+        				</div>
+       					<div style = "display:inline-block;">
+          					<span class='function' data-content='Thank You'>
+            				<i class="fa fa-gift"></i>
+            				<div>
+              					<%= @indep_var['plain']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Good Writer'>
+            				<i class="fa fa-pencil"></i>
+            				<div>
+              					<%= @indep_var['writer']%>
+            				</div>
+          					</span>
+        				</div>
+       					<div style = "display:inline-block;">
+          					<span class='function' data-content='Great Lists'>
+            				<i class="fa fa-list"></i>
+            				<div>
+              					<%= @indep_var['list']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Just a Note'>
+            				<i class="fa fa-file-o"></i>
+            				<div>
+              					<%= @indep_var['note']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Great Photo'>
+            				<i class="fa fa-picture-o"></i>
+            				<div>
+              					<%= @indep_var['photos']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Hot Stuff'>
+            				<i class="glyphicon glyphicon-fire"></i>
+            				<div>
+              					<%= @indep_var['hot']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Write More'>
+            				<i class="fa fa-plus"></i>
+            				<div>
+              					<%= @indep_var['more']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content="You're Cool">
+            				<i class="fa fa-cloud"></i>
+            				<div>
+              					<%= @indep_var['cool']%>
+            				</div>
+          					</span>
+        				</div>
+      				</div>
+				</div>
+			</div>
+   			<div class="col-xs-6 col-md-4">
+   				<div class="panel panel-default">
+   					<div class="variable-text">Each type of vote</div>
+   					<div class="variable-icon-block">
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Useful'>
+            				<i class="fa fa-thumbs-up"></i>
+            				<div>
+              					<%= @indep_var['Useful']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Funny'>
+            				<i class="fa fa-smile-o"></i>
+            				<div>
+              					<%= @indep_var['Funny']%>
+            				</div>
+          					</span>
+        				</div>
+        				<div style = "display:inline-block;">
+          					<span class='function' data-content='Cool'>
+            				<i class="fa fa-cloud"></i>
+            				<div>
+              					<%= @indep_var['Cool']%>
+            				</div>
+          					</span>
+        				</div>
+   					</div>
+   				</div>
+   			</div>
+		</div>
+	</div>
+</h2>

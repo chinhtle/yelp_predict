@@ -40,6 +40,9 @@ module UsersHelper
     #function for parsing independent variables
     def get_indep_var(url)
       #Get page
+      if url == "http://www.yelp.com/user_details?userid=local"
+        url = "#{Rails.root}/yelp_data/offline/users/yelp_home.htm"
+      end
 
       proxy = Proxy.new
       result = proxy.request_response(url)
@@ -89,15 +92,22 @@ module UsersHelper
       #average_rating
 	  if(@indep_var['Review'] > 0)
 		sum = 0
+		local_num = 3
 		#get sum of ratings for the profile home page
 		sum = get_sum(page)
 		#checks if more button exists
 		more_check = "p[style='margin:5px 0px;clear:both;text-align:right;']"
 		if(page.at_css(more_check))
 			more = page.css(more_check).css('a')[0]['href']
-			reviews_url = 'http://www.yelp.com' + more
+      if url == "http://www.yelp.com/user_details?userid=local"
+        reviews_url = "#{Rails.root}/yelp_data/offline/users/more_page.htm"
+      else
+        reviews_url = 'http://www.yelp.com' + more
+      end
+
       result = proxy.request_response(reviews_url)
       more_page = Nokogiri::HTML(result.body, 'UTF-8')
+
 			#add to the sum of ratings for the page after more is clicked
 			sum += get_sum(more_page)
 			#check if next button exists
@@ -105,13 +115,19 @@ module UsersHelper
 			#add the sum of ratings for each next page until there is no more next button
 			while(more_page.at_css(next_check))
 			next_page = more_page.css(next_check)[0]['href']
-			next_url = 'http://www.yelp.com' + next_page
+			if url == "http://www.yelp.com/user_details?userid=local"
+				local_next = 'page_' + local_num.to_s + '.htm'
+				next_url = "#{Rails.root}/yelp_data/offline/users/" + local_next
+			else
+				next_url = 'http://www.yelp.com' + next_page
+			end
       if DELAY_REVIEW_PAGE_REQUESTS
 			  sleep(Common::GET_REQ_TIME)
       end
       result = proxy.request_response(next_url)
       more_page = Nokogiri::HTML(result.body, 'UTF-8')
 			sum += get_sum(more_page)
+			local_num = local_num + 1
 			end
 		end
 		avg = sum/@indep_var["Review"]
