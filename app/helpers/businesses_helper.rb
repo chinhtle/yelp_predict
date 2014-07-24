@@ -973,10 +973,10 @@ module BusinessesHelper
   end
 
   def draw_personality_bar value_now, width, type
-    res =  '<div class="col-xs-3 col-md-3 text-right">'
+    res =  '<div class="col-xs-2 col-md-3">'
     res <<   "<span class=\"glyphicon #{Personality::INTRO_EXTRO_GLYPH_TYPE[type]}\"></span>"
     res << '</div>'
-    res << '<div class="col-xs-8 col-md-8">'
+    res << '<div class="col-xs-9 col-md-8">'
     res <<   '<div class="progress">'
     res <<     "<div class=\"progress-bar #{Personality::INTRO_EXTRO_BAR_TYPE[type]}\"" \
                "role=\"progressbar\" aria-valuenow=\"#{value_now}\"" \
