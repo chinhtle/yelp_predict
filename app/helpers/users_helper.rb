@@ -207,6 +207,10 @@ module UsersHelper
                                       indep_variables['Fan'].to_s)
     res <<         add_separator('normal')
 
+    res <<         add_attr_value_col('Number of Times Elite',
+                                      indep_variables['elite'].to_s)
+    res <<         add_separator('normal')
+
     res <<         add_attr_value_col('Average Rating Given',
                                       "<div class=\"rating\">
                                       #{Common::draw_stars(
