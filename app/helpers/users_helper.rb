@@ -177,11 +177,140 @@ module UsersHelper
       test_set = Rjb::import('weka.classifiers.Evaluation').new(instances)
       #get the prediction
       result = test_set._invoke('evaluateModelOnceAndRecordPrediction', 'Lweka.classifiers.Classifier;Lweka.core.Instance;', file, first)
-	  if (result == 0.0)
-		result = "Extroverted"
-		else
-		result = "Introverted"
-	  end
+      if (result == 0.0)
+        result = "Extroverted"
+      else
+        result = "Introverted"
+      end
       return result
     end
+
+  def draw_num_attributes_card indep_variables
+    puts "Indep variables: #{indep_variables}"
+
+    res =   '<div class="col-xs-12 col-md-9 col-centered">'
+    res <<     '<div class="well well-lg">'
+    res <<       '<div class="row">'
+    res <<         add_attr_card_header
+    res <<         add_separator('header')
+
+    # Add attributes
+    res <<         add_attr_value_col('Number of Friends',
+                                      indep_variables['Friend'].to_s)
+    res <<         add_separator('normal')
+
+    res <<         add_attr_value_col('Number of Reviews',
+                                      indep_variables['Review'].to_s)
+    res <<         add_separator('normal')
+
+    res <<         add_attr_value_col('Number of Fans',
+                                      indep_variables['Fan'].to_s)
+    res <<         add_separator('normal')
+
+    res <<         add_attr_value_col('Average Rating Given',
+                                      "<div class=\"rating\">
+                                      #{Common::draw_stars(
+                                        indep_variables['Average'], 1)}</div>")
+    res <<         add_separator('normal')
+
+    res <<         add_attr_value_col('Number of Compliments',
+                                      indep_variables['Compliment'].to_s)
+
+    # Add compliments and votes received
+    res <<         draw_compliments_votes_card(indep_variables)
+
+    res <<       '</div>'
+    res <<     '</div>'
+    res <<   '</div>'
+
+    return res.html_safe
+  end
+
+  def add_attr_value_col attr, val
+    puts "Attribute: #{attr}, value: #{val}"
+
+    res =  '<div class="row">'
+    res <<   '<div class="col-xs-12 col-md-7 col-user-attr-title">'
+    res <<     "<b>#{attr}</b>"
+    res <<   '</div>'
+    res <<   '<div class="col-xs-12 col-md-5 col-user-attr-value">'
+    res <<     val
+    res <<   '</div>'
+    res << '</div>'
+  end
+
+  def add_attr_card_header
+    res =   '<h2>'
+    res <<    '<div class="col-header">'
+    res <<      'What variables determined your personality?'
+    res <<    '</div>'
+    res <<  '</h2>'
+
+    return res
+  end
+
+  def add_separator type
+    return "<div class=\"col-row-separator-#{type}\"></div>"
+  end
+
+  def add_inner_separator type
+    return "<div class=\"col-inner-row-separator-#{type}\"></div>"
+  end
+
+  def draw_compliments_votes_card indep_variables
+    res =  '<div class="row">'
+    res <<   '<div class="well-inner">'
+    res <<     add_compliments_attrs(indep_variables)
+    res <<     add_inner_separator('header')
+    res <<     add_votes_attrs(indep_variables)
+    res <<   '</div>'
+    res << '</div>'
+  end
+
+  def draw_glyph_value glyph, val, tooltip
+    res =  '<div class="compliment-attr">'
+    res <<   "<span class=\"function\" data-content=\"#{tooltip}\">"
+    res <<     "<i class=\"fa fa-#{glyph} compliment-glyph\"></i>"
+    res <<     "<div>#{val}</div>"
+    res <<   '</span>'
+    res << '</div>'
+
+    return res
+  end
+
+  def add_compliments_attrs indep_variables
+    res =   add_inner_well_header 'Compliments Received'
+    res <<  draw_glyph_value('user', indep_variables['profile'], 'Like Your Profile')
+    res <<  draw_glyph_value('heart', indep_variables['cute'], 'Cute Pic')
+    res <<  draw_glyph_value('smile-o', indep_variables['funny'], "You're Funny")
+    res <<  draw_glyph_value('gift', indep_variables['plain'], 'Thank You')
+    res <<  draw_glyph_value('pencil', indep_variables['writer'], 'Good Writer')
+    res <<  draw_glyph_value('list', indep_variables['list'], 'Great Lists')
+    res <<  draw_glyph_value('file-o', indep_variables['note'], 'Just a Note')
+    res <<  draw_glyph_value('picture-o', indep_variables['photos'], 'Great Photo')
+    res <<  draw_glyph_value('fire', indep_variables['hot'], 'Hot Stuff')
+    res <<  draw_glyph_value('plus', indep_variables['more'], 'Write More')
+    res <<  draw_glyph_value('cloud', indep_variables['cool'], "You're Cool")
+
+    return res
+  end
+
+  def add_inner_well_header header
+    res =   '<div class="compliment-header">'
+    res <<    header
+    res <<  '</div>'
+    res <<  add_inner_separator('normal')
+
+    return res
+  end
+
+  def add_votes_attrs indep_variables
+    res =   add_inner_well_header 'Votes Received'
+    res <<  draw_glyph_value('thumbs-up', indep_variables['Useful'], 'Useful')
+    res <<  draw_glyph_value('smile-o', indep_variables['Funny'], 'Funny')
+    res <<  draw_glyph_value('cloud', indep_variables['Cool'], 'Cool')
+
+    return res
+  end
 end
+

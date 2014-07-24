@@ -17,11 +17,10 @@ class Proxy
     @proxy_port =  proxy_port;
     @proxy_user =  proxy_user;
     @proxy_pass =  proxy_pass;
+    @retries = 1
   end
 
   def request_response(uri_str, limit = 10)
-    retries = 1
-
     begin
       page = get_page(uri_str)
       status_code = page.code.to_i
@@ -29,11 +28,11 @@ class Proxy
       puts "Received status code: #{status_code}"
     rescue Errno::ETIMEDOUT, Timeout::Error, Mechanize::ResponseCodeError,
            Net::HTTPForbidden
-      if retries < FORBIDDEN_REQ_RETRIES
-        puts "Received error.. Retrying. Request num: #{retries}"
-        page = get_page(uri_str)
+      if @retries < FORBIDDEN_REQ_RETRIES
+        puts "Received error.. Retrying. Request num: #{@retries}"
+        page = request_response(uri_str)
 
-        retries += 1
+        @retries += 1
       end
     end
 

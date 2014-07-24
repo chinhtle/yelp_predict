@@ -992,39 +992,8 @@ module BusinessesHelper
   end
 
   def draw_rating_stars_and_reviews rating, reviews
-    total_stars = 5
-    full_stars = (rating / 1).to_i
-    enable_half_star = false
-
-    # Sizes are as follows: fa-lg, fa-2x, fa-3x, fa-4x, fa-5x
-    star_size = 'fa-2x'
-
-    if (rating - full_stars) >= 0.5
-      enable_half_star = true
-    end
-
-    res = '<div class="rating">'
-
-    # Draw the full stars
-    for i in 0..full_stars-1
-      res << "<i class=\"fa fa-star #{star_size}\"></i>"
-    end
-
-    if enable_half_star
-      res << "<i class=\"fa fa-star-half-o #{star_size}\"></i>"
-    end
-
-    # Calculate any empty stars we need to draw.
-    remaining_stars = total_stars - full_stars
-
-    # And if half star was enabled, subtract that as well as 1 full star.
-    if enable_half_star
-      remaining_stars = remaining_stars - 1
-    end
-
-    for i in 0..remaining_stars-1
-      res << "<i class=\"fa fa-star-o #{star_size}\"></i>"
-    end
+    res =  '<div class="rating">'
+    res <<    Common::draw_stars(rating, 2)
 
     # Add the total number of reviews
     res <<    draw_review_count(reviews)
@@ -1032,6 +1001,8 @@ module BusinessesHelper
 
     return res
   end
+
+
 
   def display_invalid_bus_id
     res = '<h2>Invalid Business ID</h2>'

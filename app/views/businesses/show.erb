@@ -23,7 +23,9 @@
     </div>
   </div>
   <div class="container">
-    <%= show_personality_description @business_dominant %>
+    <div class="col-xs-12 col-md-9 col-centered" style="text-align: justify">
+      <%= show_personality_description @business_dominant %>
+    </div>
   </div>
   <div id='chart' style="width: 100%; min-width: 310px"></div>
   <% if @pie_chart_google_visualr %>
