@@ -4,7 +4,7 @@ require 'open-uri'
 require 'mechanize'
 
 class Proxy
-  PROXY_HOST = 'us.proxymesh.com'
+  PROXY_HOST = 'us-il.proxymesh.com'
   PROXY_PORT = 31280
   PROXY_USER = ENV['PROXYMESH_USER']
   PROXY_PASS = ENV['PROXYMESH_PASS']
