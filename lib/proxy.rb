@@ -4,6 +4,7 @@ require 'open-uri'
 require 'mechanize'
 
 class Proxy
+  USE_PROXY = false
   PROXY_HOST = 'us-il.proxymesh.com'
   PROXY_PORT = 31280
   PROXY_USER = ENV['PROXYMESH_USER']
@@ -42,7 +43,11 @@ class Proxy
   def get_page(url)
     agent = Mechanize.new
     agent.user_agent_alias = 'Mac Safari'
-    agent.set_proxy(PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS)
+
+    if USE_PROXY
+      agent.set_proxy(PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS)
+    end
+    
     return agent.get url
   end
 end
