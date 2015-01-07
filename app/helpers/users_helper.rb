@@ -101,7 +101,7 @@ module UsersHelper
 		if(page.at_css(more_check))
 			more = page.css(more_check).css('a')[0]['href']
       if url == "http://www.yelp.com/user_details?userid=local"
-        reviews_url = "#{Rails.root}/yelp_data/offline/users/more_page.htm"
+        reviews_url = "file://#{Rails.root}/yelp_data/offline/users/more_page.htm"
       else
         reviews_url = 'http://www.yelp.com' + more
       end
