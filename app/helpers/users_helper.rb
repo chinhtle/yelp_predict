@@ -41,7 +41,7 @@ module UsersHelper
     def get_indep_var(url)
       #Get page
       if url == "http://www.yelp.com/user_details?userid=local"
-        url = "#{Rails.root}/yelp_data/offline/users/yelp_home.htm"
+        url = "file://#{Rails.root}/yelp_data/offline/users/yelp_home.htm"
       end
 
       proxy = Proxy.new
@@ -118,7 +118,7 @@ module UsersHelper
 			next_page = more_page.css(next_check)[0]['href']
 			if url == "http://www.yelp.com/user_details?userid=local"
 				local_next = 'page_' + local_num.to_s + '.htm'
-				next_url = "#{Rails.root}/yelp_data/offline/users/" + local_next
+				next_url = "file://#{Rails.root}/yelp_data/offline/users/" + local_next
 			else
 				next_url = 'http://www.yelp.com' + next_page
 			end
